@@ -24,10 +24,10 @@ class InstagramResourceOwner extends GenericOAuth2ResourceOwner
      * {@inheritdoc}
      */
     protected $paths = array(
-        'identifier' => 'data.id',
-        'nickname' => 'data.username',
-        'realname' => 'data.full_name',
-        'profilepicture' => 'data.profile_picture',
+        'identifier'      => 'data.id',
+        'name'        => 'data.username',
+        'profilepicture'  => 'data.profile_picture',
+        'followers' => 'data.counts.followed_by',
     );
 
     /**
@@ -38,6 +38,22 @@ class InstagramResourceOwner extends GenericOAuth2ResourceOwner
         return $this->httpRequest($this->normalizeUrl($url, $parameters), null, array(), 'GET');
     }
 
+        /**
+     * {@inheritDoc}
+     */
+    public function revokeToken($token)
+    {
+        $parameters = array(
+            'client_id' => $this->options['client_id'],
+            'client_secret' => $this->options['client_secret'],
+            'token' => $token,
+        );
+
+        $response = $this->httpRequest($this->options['revoke_token_url'], http_build_query($parameters, '', '&'), array(), 'POST');
+
+        return 200 === $response->getStatusCode();
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -46,12 +62,13 @@ class InstagramResourceOwner extends GenericOAuth2ResourceOwner
         parent::configureOptions($resolver);
 
         $resolver->setDefaults(array(
-            'authorization_url' => 'https://api.instagram.com/oauth/authorize',
-            'access_token_url' => 'https://api.instagram.com/oauth/access_token',
-            'infos_url' => 'https://api.instagram.com/v1/users/self',
+            'authorization_url'         => 'https://api.instagram.com/oauth/authorize',
+            'access_token_url'          => 'https://api.instagram.com/oauth/access_token',
+            'revoke_token_url'          => 'https://www.instagram.com/oauth/revoke_access/',
+            'infos_url'                 => 'https://api.instagram.com/v1/users/self',
 
             // Instagram supports authentication with only one defined URL
-            'auth_with_one_url' => true,
+            'auth_with_one_url' => false,
 
             'use_bearer_authorization' => false,
         ));

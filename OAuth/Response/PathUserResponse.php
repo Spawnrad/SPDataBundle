@@ -31,6 +31,8 @@ class PathUserResponse extends AbstractUserResponse
         'realname' => null,
         'email' => null,
         'profilepicture' => null,
+        'followers' => null,
+        'accounts' => null,
     );
 
     /**
@@ -90,6 +92,70 @@ class PathUserResponse extends AbstractUserResponse
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function getFollowers($limit)
+    {
+        return $this->getValueForPath('followers', $limit);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPageId($page_level)
+    {
+        return $this->getValueForPath('page_id', null, $page_level);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPageAccessToken($page_id)
+    {
+        return $this->getValueForPath('page_access_token', null, null, $page_id);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPageLink($page_id)
+    {
+        return $this->getValueForPath('link', null, null, $page_id);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPageName($page_id = null)
+    {
+        return $this->getValueForPath('name', null, null, $page_id);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getUploadId()
+    {
+        return $this->getValueForPath('uploadId');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getAccounts()
+    {
+        return $this->getValueForPath('accounts');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getInstagramAccount($page_id)
+    {
+        return $this->getValueForPath('instagram', null, null, $page_id);
+    }
+
+    /**
      * Get the configured paths.
      *
      * @return array
@@ -126,7 +192,7 @@ class PathUserResponse extends AbstractUserResponse
      *
      * @return null|string
      */
-    protected function getValueForPath($path)
+    protected function getValueForPath($path, $limit = null, $page_level = null, $page_id = null)
     {
         $data = $this->data;
         if (!$data) {
@@ -136,6 +202,23 @@ class PathUserResponse extends AbstractUserResponse
         $steps = $this->getPath($path);
         if (!$steps) {
             return null;
+        }
+
+        if ($page_id) {
+            $accountsPath = $this->getPath('accounts');
+
+            if ($accountsPath) {
+                $accounts = $this->getValue($accountsPath, $data);
+
+                if ($accounts) {
+                    $page_level = array_search($page_id, array_column($accounts, 'id'));
+                }
+            }
+        }
+
+
+        if ($page_level) {
+            $steps = preg_replace("|(\d+)|", $page_level, $steps);
         }
 
         if (is_array($steps)) {
@@ -148,7 +231,27 @@ class PathUserResponse extends AbstractUserResponse
                 $value[] = $this->getValue($step, $data);
             }
 
-            return trim(implode(' ', $value)) ?: null;
+            return trim(implode(' ', $value)) ? : null;
+        }
+
+        if (isset($limit)) {
+            $value = $this->getValue($steps, $data);
+            $cp = 0;
+            while ($value < $limit and $cp != 5) {
+                $cp++;
+                $steps = preg_replace_callback("|(\d+)|", function ($matches) {
+                    return ++$matches[1];
+                }, $steps);
+                $value = $this->getValue($steps, $data);
+                preg_match("|(\d+)|", $steps, $level);
+            }
+
+            //return page level and value
+            if ($value >= $limit and isset($level)) {
+                return [$value, $level[1]];
+            }
+
+            return $value;
         }
 
         return $this->getValue($steps, $data);

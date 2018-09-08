@@ -74,6 +74,20 @@ interface UserResponseInterface extends ResponseInterface
      */
     public function getProfilePicture();
 
+        /**
+     * Get Accounts
+     *
+     * @return null|array
+     */
+    public function getAccounts();
+
+    /**
+     * Get Followers count
+     *
+     * @return null|string
+     */
+    public function getFollowers($limit);
+
     /**
      * Get the access token used for the request.
      *

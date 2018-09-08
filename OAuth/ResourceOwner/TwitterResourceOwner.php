@@ -25,10 +25,9 @@ class TwitterResourceOwner extends GenericOAuth1ResourceOwner
      */
     protected $paths = array(
         'identifier' => 'id_str',
-        'nickname' => 'screen_name',
-        'realname' => 'name',
+        'name' => 'screen_name',
         'profilepicture' => 'profile_image_url_https',
-        'email' => 'email',
+        'followers' => 'followers_count',
     );
 
     /**
@@ -43,6 +42,11 @@ class TwitterResourceOwner extends GenericOAuth1ResourceOwner
         return parent::getUserInformation($accessToken, $extraParameters);
     }
 
+    public function revokeToken($token)
+    {
+        return;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -51,7 +55,7 @@ class TwitterResourceOwner extends GenericOAuth1ResourceOwner
         parent::configureOptions($resolver);
 
         $resolver->setDefaults(array(
-            'authorization_url' => 'https://api.twitter.com/oauth/authenticate',
+            'authorization_url' => 'https://api.twitter.com/oauth/authorize',
             'request_token_url' => 'https://api.twitter.com/oauth/request_token',
             'access_token_url' => 'https://api.twitter.com/oauth/access_token',
             'infos_url' => 'https://api.twitter.com/1.1/account/verify_credentials.json',

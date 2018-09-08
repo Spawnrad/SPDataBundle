@@ -25,10 +25,10 @@ class YoutubeResourceOwner extends GenericOAuth2ResourceOwner
      */
     protected $paths = array(
         'identifier' => 'items.0.id',
-        'nickname' => 'items.0.snippet.title',
-        'realname' => 'items.0.snippet.title',
-        'email' => 'email',
+        'name' => 'items.0.snippet.title',
         'profilepicture' => 'items.0.snippet.thumbnails.high.url',
+        'followers' => 'items.0.statistics.subscriberCount',
+        'uploadId' => 'items.0.contentDetails.relatedPlaylists.uploads',
     );
 
     /**
@@ -43,6 +43,16 @@ class YoutubeResourceOwner extends GenericOAuth2ResourceOwner
             'hd' => $this->options['hd'],
             'prompt' => $this->options['prompt'],
         ), $extraParameters));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function revokeToken($token)
+    {
+        $response = $this->httpRequest($this->normalizeUrl($this->options['revoke_token_url'], array('token' => $token)), null, array(), 'POST');
+
+        return 200 === $response->getStatusCode();
     }
 
     /**
@@ -77,7 +87,6 @@ class YoutubeResourceOwner extends GenericOAuth2ResourceOwner
             // @link https://developers.google.com/accounts/docs/OAuth2Login#authenticationuriparameters
             ->setAllowedValues('display', array('page', 'popup', 'touch', 'wap', null))
             ->setAllowedValues('login_hint', array('email address', 'sub', null))
-            ->setAllowedValues('prompt', array(null, 'consent', 'select_account', null))
-        ;
+            ->setAllowedValues('prompt', array(null, 'consent', 'select_account', null));
     }
 }
