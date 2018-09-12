@@ -90,7 +90,7 @@
 
     "extra": {
         "branch-alias": {
-            "dev-master": "v1.x-dev"
+            "dev-master": "v1.0-dev"
         }
     }
 }
