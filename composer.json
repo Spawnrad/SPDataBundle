@@ -154,7 +154,7 @@
 
     "extra": {
         "branch-alias": {
-            "dev-master": "v1.0.8"
+            "dev-master": "v1.0.9"
         }
     }
 }
