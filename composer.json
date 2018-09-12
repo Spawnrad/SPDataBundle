@@ -1,75 +1,11 @@
 {
     "name":        "spawnrad/oauth-bundle",
     "type":        "symfony-bundle",
-    "homepage":    "http://github.com/hwi/HWIOAuthBundle",
+    "homepage":    "http://github.com/spawnrad/HWIOAuthBundle",
     "license":     "MIT",
-    "description": "Support for authenticating users using both OAuth1.0a and OAuth2 in Symfony2.",
+    "description": "Symfony2 Bundle HWIOAuthBundle Extension.",
     "keywords":    [
-        "authentication",
-        "firewall",
-        "oauth",
-        "oauth1",
-        "oauth2",
-        "security",
-
-        "amazon",
-        "asana",
-        "auth0",
-        "azure",
-        "bitbucket",
-        "bitly",
-        "box",
-        "bufferapp",
-        "clever",
-        "dailymotion",
-        "deezer",
-        "deviantart",
-        "discogs",
-        "disqus",
-        "dropbox",
-        "eventbrite",
-        "eve online",
-        "facebook",
-        "fiware",
-        "flickr",
-        "foursquare",
-        "github",
-        "gitlab",
-        "google",
-        "hubic",
-        "instagram",
-        "jawbone",
-        "jira",
-        "linkedin",
-        "mail.ru",
-        "odnoklassniki",
-        "paypal",
-        "qq",
-        "reddit",
-        "runkeeper",
-        "salesforce",
-        "sensio connect",
-        "sina weibo",
-        "slack",
-        "sound cloud",
-        "spotify",
-        "stack exchange",
-        "stereomood",
-        "strava",
-        "toshl",
-        "trakt",
-        "trello",
-        "twitch",
-        "twitter",
-        "vkontakte",
-        "windows live",
-        "wordpress",
-        "wunderlist",
-        "xing",
-        "yahoo",
-        "yandex",
-        "youtube",
-        "37signals"
+        "youtube"
     ],
 
     "authors": [
@@ -154,7 +90,7 @@
 
     "extra": {
         "branch-alias": {
-            "dev-master": "v1.0.11"
+            "dev-master": "v1.x"
         }
     }
 }
