@@ -1,5 +1,5 @@
 {
-    "name":        "hwi/oauth-bundle",
+    "name":        "spawnrad/oauth-bundle",
     "type":        "symfony-bundle",
     "homepage":    "http://github.com/hwi/HWIOAuthBundle",
     "license":     "MIT",
@@ -154,7 +154,7 @@
 
     "extra": {
         "branch-alias": {
-            "dev-master": "v1.0.1"
+            "dev-master": "0.6-dev"
         }
     }
 }
