@@ -1,0 +1,7 @@
+services:
+    sp_data.http_client:
+        public: true
+        class: Http\Client\Common\HttpMethodsClient
+        arguments:
+           - "@sp_data.http.client"
+           - "@sp_data.http.message_factory"
