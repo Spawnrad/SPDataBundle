@@ -1,58 +1,33 @@
 <?php
 
-/*
- * This file is part of the HWIOAuthBundle package.
- *
- * (c) Hardware.Info <opensource@hardware.info>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace HWI\Bundle\OAuthBundle\OAuth\ResourceOwner;
+namespace SP\Bundle\DataBundle\ResourceOwner;
 
 use Http\Client\Common\HttpMethodsClient;
 use Http\Client\Exception;
-use HWI\Bundle\OAuthBundle\OAuth\Exception\HttpTransportException;
-use HWI\Bundle\OAuthBundle\OAuth\RequestDataStorageInterface;
-use HWI\Bundle\OAuthBundle\OAuth\ResourceOwnerInterface;
-use HWI\Bundle\OAuthBundle\OAuth\Response\PathUserResponse;
-use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
-use Psr\Http\Message\ResponseInterface;
+use SP\Bundle\DataBundle\Exception\HttpTransportException;
+use SP\Bundle\DataBundle\Response\Data\PathResponse as PathDataResponse;
+use SP\Bundle\DataBundle\Response\Analytic\PathResponse as PathAnalyticResponse;
+use SP\Bundle\DataBundle\Response\Data\DataResponseInterface;
 use Symfony\Component\HttpFoundation\Request as HttpRequest;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\HttpUtils;
 
-/**
- * AbstractResourceOwner.
- *
- * @author Geoffrey Bachelet <geoffrey.bachelet@gmail.com>
- * @author Alexander <iam.asm89@gmail.com>
- * @author Francisco Facioni <fran6co@gmail.com>
- * @author Joseph Bielawski <stloyd@gmail.com>
- */
 abstract class AbstractResourceOwner implements ResourceOwnerInterface
 {
     /**
      * @var array
      */
-    protected $options = [];
+    protected $options = array();
 
     /**
      * @var array
      */
-    protected $paths = [];
+    protected $paths = array();
 
     /**
-     * @var HttpMethodsClient
+     * @var HttpClientInterface
      */
     protected $httpClient;
-
-    /**
-     * @var HttpUtils
-     */
-    protected $httpUtils;
 
     /**
      * @var string
@@ -62,31 +37,27 @@ abstract class AbstractResourceOwner implements ResourceOwnerInterface
     /**
      * @var string
      */
-    protected $state;
+    protected $access_token;
 
     /**
-     * @var RequestDataStorageInterface
+     * @var string
      */
-    protected $storage;
+    protected $etag;
 
     /**
-     * @param HttpMethodsClient           $httpClient Httplug client
-     * @param HttpUtils                   $httpUtils  Http utils
-     * @param array                       $options    Options for the resource owner
-     * @param string                      $name       Name for the resource owner
-     * @param RequestDataStorageInterface $storage    Request token storage
+     * @param HttpClientInterface $httpClient Buzz http client
+     * @param array $options Options for the resource owner
+     * @param string $name Name for the resource owner
      */
     public function __construct(
         HttpMethodsClient $httpClient,
         HttpUtils $httpUtils,
         array $options,
-        $name,
-        RequestDataStorageInterface $storage
+        $name
     ) {
         $this->httpClient = $httpClient;
         $this->httpUtils = $httpUtils;
         $this->name = $name;
-        $this->storage = $storage;
 
         if (!empty($options['paths'])) {
             $this->addPaths($options['paths']);
@@ -151,63 +122,14 @@ abstract class AbstractResourceOwner implements ResourceOwnerInterface
     }
 
     /**
-     * Retrieve an access token for a given code.
-     *
-     * @param HttpRequest $request         The request object from where the code is going to extracted
-     * @param mixed       $redirectUri     The uri to redirect the client back to
-     * @param array       $extraParameters An array of parameters to add to the url
-     *
-     * @throws AuthenticationException If an OAuth error occurred or no access token is found
-     * @throws HttpTransportException
-     *
-     * @return array array containing the access token and it's 'expires_in' value,
-     *               along with any other parameters returned from the authentication
-     *               provider
-     */
-    abstract public function getAccessToken(HttpRequest $request, $redirectUri, array $extraParameters = []);
-
-    /**
-     * Refresh an access token using a refresh token.
-     *
-     * @param string $refreshToken    Refresh token
-     * @param array  $extraParameters An array of parameters to add to the url
-     *
-     * @throws AuthenticationException If an OAuth error occurred or no access token is found
-     * @throws HttpTransportException
-     *
-     * @return array array containing the access token and it's 'expires_in' value,
-     *               along with any other parameters returned from the authentication
-     *               provider
-     */
-    public function refreshAccessToken($refreshToken, array $extraParameters = [])
-    {
-        throw new AuthenticationException('OAuth error: "Method unsupported."');
-    }
-
-    /**
-     * Revoke an OAuth access token or refresh token.
-     *
-     * @param string $token the token (access token or a refresh token) that should be revoked
-     *
-     * @throws AuthenticationException If an OAuth error occurred
-     * @throws HttpTransportException
-     *
-     * @return bool returns True if the revocation was successful, otherwise False
-     */
-    public function revokeToken($token)
-    {
-        throw new AuthenticationException('OAuth error: "Method unsupported."');
-    }
-
-    /**
      * Get the response object to return.
      *
-     * @return UserResponseInterface
+     * @return DataResponseInterface
      */
-    protected function getUserResponse()
+    protected function getDataResponse()
     {
-        $response = new $this->options['user_response_class']();
-        if ($response instanceof PathUserResponse) {
+        $response = new $this->options['response_class'];
+        if ($response instanceof PathDataResponse || $response instanceof PathAnalyticResponse) {
             $response->setPaths($this->paths);
         }
 
@@ -216,15 +138,15 @@ abstract class AbstractResourceOwner implements ResourceOwnerInterface
 
     /**
      * @param string $url
-     * @param array  $parameters
+     * @param array $parameters
      *
      * @return string
      */
-    protected function normalizeUrl($url, array $parameters = [])
+    protected function normalizeUrl($url, array $parameters = array())
     {
         $normalizedUrl = $url;
         if (!empty($parameters)) {
-            $normalizedUrl .= (false !== strpos($url, '?') ? '&' : '?').http_build_query($parameters, '', '&');
+            $normalizedUrl .= (false !== strpos($url, '?') ? '&' : '?') . http_build_query($parameters, '', '&');
         }
 
         return $normalizedUrl;
@@ -242,18 +164,24 @@ abstract class AbstractResourceOwner implements ResourceOwnerInterface
      *
      * @return ResponseInterface The response content
      */
-    protected function httpRequest($url, $content = null, array $headers = [], $method = null)
+    protected function httpRequest($url, $content = null, $headers = [], $method = null)
     {
         if (null === $method) {
             $method = null === $content || '' === $content ? 'GET' : 'POST';
         }
 
-        $headers += array('User-Agent' => 'HWIOAuthBundle (https://github.com/hwi/HWIOAuthBundle)');
+        $headers += array('User-Agent' => 'SPDataBundle (https://github.com/spawnrad/SPDataBundle)');
         if (is_string($content)) {
-            $headers += array('Content-Length' => (string) strlen($content));
+            $headers += array('Content-Length' => (string)strlen($content));
         } elseif (is_array($content)) {
             $content = http_build_query($content, '', '&');
         }
+
+        if ($this->etag) {
+            $headers += array('If-None-Match' => $this->etag);
+        }
+
+        $request = new httpRequest($method, $url, $headers, $content);
 
         try {
             return $this->httpClient->send(
@@ -270,11 +198,11 @@ abstract class AbstractResourceOwner implements ResourceOwnerInterface
     /**
      * Get the 'parsed' content based on the response headers.
      *
-     * @param ResponseInterface $rawResponse
+     * @param Response $rawResponse
      *
      * @return array
      */
-    protected function getResponseContent(ResponseInterface $rawResponse)
+    protected function getResponseContent(Response $rawResponse)
     {
         // First check that content in response exists, due too bug: https://bugs.php.net/bug.php?id=54484
         $content = (string) $rawResponse->getBody();
@@ -300,51 +228,47 @@ abstract class AbstractResourceOwner implements ResourceOwnerInterface
         return md5(microtime(true).uniqid('', true));
     }
 
+    public function getAccessToken()
+    {
+        return $this->access_token;
+    }
+
+    public function setAccessToken($access_token)
+    {
+        $this->access_token = $access_token;
+    }
+
     /**
-     * @param string $url
-     * @param array  $parameters
-     *
-     * @throws HttpTransportException
-     *
-     * @return ResponseInterface
+     * @return string
      */
-    abstract protected function doGetTokenRequest($url, array $parameters = []);
+    public function getEtag()
+    {
+        return $this->etag;
+    }
+
+    /**
+     * @param string $etag
+     */
+    public function setEtag($etag)
+    {
+        $this->etag = $etag;
+    }
 
     /**
      * @param string $url
-     * @param array  $parameters
+     * @param array $parameters
      *
-     * @throws HttpTransportException
-     *
-     * @return ResponseInterface
+     * @return HttpResponse
      */
-    abstract protected function doGetUserInformationRequest($url, array $parameters = []);
+    abstract protected function doGetInformationRequest($url, array $parameters = array());
 
     /**
-     * Configure the option resolver.
+     * Configure the option resolver
      *
      * @param OptionsResolver $resolver
-     *
-     * @throws \Symfony\Component\OptionsResolver\Exception\AccessException
-     * @throws \Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException
      */
     protected function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setRequired([
-            'client_id',
-            'client_secret',
-            'authorization_url',
-            'access_token_url',
-            'infos_url',
-        ]);
 
-        $resolver->setDefaults([
-            'scope' => null,
-            'csrf' => false,
-            'user_response_class' => PathUserResponse::class,
-            'auth_with_one_url' => false,
-        ]);
-
-        $resolver->setAllowedValues('csrf', [true, false]);
     }
 }
