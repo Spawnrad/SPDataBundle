@@ -12,6 +12,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\DefinitionDecorator;
+use Symfony\Component\DependencyInjection\ChildDefinition;
 
 class SPDataExtension extends Extension
 {
@@ -67,11 +68,11 @@ class SPDataExtension extends Extension
                 throw new InvalidConfigurationException(sprintf('Class "%s" must implement interface "SP\Bundle\DataBundle\Data\ResourceOwnerInterface".', $options['class']));
             }
 
-            $definition = new $definitionClassname('sp_data.abstract_resource_owner.'.$type);
+            $definition = new $definitionClassname('sp_data.abstract_resource_owner.' . $type);
             $definition->setClass($options['class']);
             unset($options['class']);
         } else {
-            $definition = new $definitionClassname('sp_data.abstract_resource_owner.'.Configuration::getResourceOwnerType($type));
+            $definition = new $definitionClassname('sp_data.abstract_resource_owner.' . Configuration::getResourceOwnerType($type));
             $definition->setClass("%sp_data.resource_owner.$type.class%");
         }
 
@@ -79,7 +80,7 @@ class SPDataExtension extends Extension
         $definition->replaceArgument(3, $name);
         $definition->setPublic(true);
 
-        $container->setDefinition('sp_data.resource_owner.'.$name, $definition);
+        $container->setDefinition('sp_data.resource_owner.' . $name, $definition);
     }
 
     /**
@@ -112,5 +113,13 @@ class SPDataExtension extends Extension
 
         $container->setAlias('sp_data.http.client', new Alias($config['http']['client'], true));
         $container->setAlias('sp_data.http.message_factory', new Alias($config['http']['message_factory'], true));
+    }
+
+    /**
+     * @return string
+     */
+    private function getDefinitionClassname()
+    {
+        return class_exists(ChildDefinition::class) ? ChildDefinition::class : DefinitionDecorator::class;
     }
 }
