@@ -76,8 +76,8 @@ class SPDataExtension extends Extension
             $definition->setClass("%sp_data.resource_owner.$type.class%");
         }
 
-        $definition->replaceArgument(2, $options);
-        $definition->replaceArgument(3, $name);
+        $definition->replaceArgument(1, $options);
+        $definition->replaceArgument(2, $name);
         $definition->setPublic(true);
 
         $container->setDefinition('sp_data.resource_owner.' . $name, $definition);
