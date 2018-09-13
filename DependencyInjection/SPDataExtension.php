@@ -26,7 +26,7 @@ class SPDataExtension extends Extension
         $processor = new Processor();
         $config = $processor->processConfiguration(new Configuration(), $configs);
 
-        $this->createHttplugClient($container, $config);
+        $this->createHttplugClient($container, $configs);
         
         // setup services for all configured resource owners
         $resourceOwners = array();
