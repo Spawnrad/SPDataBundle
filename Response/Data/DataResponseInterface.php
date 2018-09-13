@@ -1,8 +1,8 @@
 <?php
 
-namespace SP\Data\Response\Data;
+namespace SP\Bundle\DataBundle\Response\Data;
 
-use SP\Data\Response\ResponseInterface;
+use SP\Bundle\DataBundle\Response\ResponseInterface;
 
 interface DataResponseInterface extends ResponseInterface
 {

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace SP\Data\DependencyInjection;
+namespace SP\Bundle\DataBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Config\FileLocator;
@@ -89,7 +89,7 @@ class SPDataExtension extends Extension
            );
        }
 
-       $container->setAlias('hwi_oauth.http.client', new Alias($config['http']['client'], true));
-       $container->setAlias('hwi_oauth.http.message_factory', new Alias($config['http']['message_factory'], true));
+       $container->setAlias('sp_data.http.client', new Alias($config['http']['client'], true));
+       $container->setAlias('sp_data.http.message_factory', new Alias($config['http']['message_factory'], true));
    }
 }

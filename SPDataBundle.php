@@ -1,8 +1,8 @@
 <?php
 
-namespace SP\Data;
+namespace SP\Bundle\DataBundle;
 
-use SP\Data\DependencyInjection\SPDataExtension;
+use SP\Bundle\DataBundle\DependencyInjection\SPDataExtension;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class SPDataBundle extends Bundle

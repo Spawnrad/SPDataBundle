@@ -1,6 +1,6 @@
 <?php
 
-namespace SP\Data\Response\Analytic;
+namespace SP\Bundle\DataBundle\Response\Analytic;
 
 class PathResponse extends AbstractResponse
 {

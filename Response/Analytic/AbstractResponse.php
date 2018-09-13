@@ -1,8 +1,8 @@
 <?php
 
-namespace SP\Data\Response\Analytic;
+namespace SP\Bundle\DataBundle\Response\Analytic;
 
-use SP\Data\ResourceOwner\ResourceOwnerInterface;
+use SP\Bundle\DataBundle\ResourceOwner\ResourceOwnerInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 abstract class AbstractResponse implements AnalyticResponseInterface

@@ -1,9 +1,9 @@
 <?php
 
 
-namespace SP\Data\Response;
+namespace SP\Bundle\DataBundle\Response;
 
-use SP\Data\ResourceOwner\ResourceOwnerInterface;
+use SP\Bundle\DataBundle\ResourceOwner\ResourceOwnerInterface;
 
 
 interface ResponseInterface

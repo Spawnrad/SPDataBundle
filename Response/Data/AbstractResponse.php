@@ -1,8 +1,8 @@
 <?php
 
-namespace SP\Data\Response\Data;
+namespace SP\Bundle\DataBundle\Response\Data;
 
-use SP\Data\ResourceOwner\ResourceOwnerInterface;
+use SP\Bundle\DataBundle\ResourceOwner\ResourceOwnerInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 abstract class AbstractResponse implements DataResponseInterface

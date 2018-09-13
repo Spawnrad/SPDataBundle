@@ -1,8 +1,8 @@
 <?php
 
-namespace SP\Data\Response\Analytic;
+namespace SP\Bundle\DataBundle\Response\Analytic;
 
-use SP\Data\Response\ResponseInterface;
+use SP\Bundle\DataBundle\Response\ResponseInterface;
 
 interface AnalyticResponseInterface extends ResponseInterface
 {

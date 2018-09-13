@@ -61,7 +61,7 @@
         "friendsofsymfony/user-bundle": "to connect FOSUB with this bundle",
         "php-http/httplug-bundle": "to provide required HTTP client with ease.",
         "symfony/property-access": "to use FOSUB integration with this bundle",
-        "symfony/twig-bundle": "to use the Twig hwi_oauth_* functions"
+        "symfony/twig-bundle": "to use the Twig sp_data_* functions"
     },
     "autoload": {
         "psr-4": {

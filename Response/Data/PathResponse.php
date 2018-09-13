@@ -1,6 +1,6 @@
 <?php
 
-namespace SP\Data\Response\Data;
+namespace SP\Bundle\DataBundle\Response\Data;
 
 class PathResponse extends AbstractResponse
 {

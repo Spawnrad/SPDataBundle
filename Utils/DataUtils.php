@@ -1,9 +1,9 @@
 <?php
 
-namespace SP\Data\Utils;
+namespace SP\Bundle\DataBundle\Utils;
 
-use SP\Data\ResourceOwner\ResourceOwnerInterface;
-use SP\Data\Utils\ResourceOwnerMap;
+use SP\Bundle\DataBundle\ResourceOwner\ResourceOwnerInterface;
+use SP\Bundle\DataBundle\Utils\ResourceOwnerMap;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 

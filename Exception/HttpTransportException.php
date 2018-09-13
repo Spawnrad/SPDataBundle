@@ -1,6 +1,6 @@
 <?php
 
-namespace SP\Data\Exception;
+namespace SP\Bundle\DataBundle\Exception;
 
 class HttpTransportException extends \RuntimeException
 {
