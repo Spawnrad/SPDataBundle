@@ -251,17 +251,14 @@ class Configuration implements ConfigurationInterface
     {
         $node
             ->children()
-            ->arrayNode('http_client')
-            ->addDefaultsIfNotSet()
-            ->children()
-            ->scalarNode('timeout')->defaultValue(5)->cannotBeEmpty()->end()
-            ->booleanNode('verify_peer')->defaultTrue()->end()
-            ->scalarNode('max_redirects')->defaultValue(5)->cannotBeEmpty()->end()
-            ->booleanNode('ignore_errors')->defaultTrue()->end()
-            ->scalarNode('proxy')->end()
+                ->arrayNode('http')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('client')->defaultValue('httplug.client.default')->end()
+                        ->scalarNode('message_factory')->defaultValue('httplug.message_factory.default')->end()
+                    ->end()
+                ->end()
             ->end()
-            ->end()
-            ->end();
+        ;
     }
-
 }
