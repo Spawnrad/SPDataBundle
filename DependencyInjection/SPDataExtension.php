@@ -19,7 +19,7 @@ class SPDataExtension extends Extension
     {
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config/'));
         $loader->load('data.yml');
-        $loader->load('http_client.yml');
+        $loader->load('http_client.yml'); 
 
         $processor = new Processor();
         $config = $processor->processConfiguration(new Configuration(), $configs);
