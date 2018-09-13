@@ -3,9 +3,10 @@
 
 namespace SP\Bundle\DataBundle\DependencyInjection;
 
+use SP\Bundle\DataBundle\Data\ResourceOwnerInterface;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
-use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Alias;
@@ -19,9 +20,9 @@ class SPDataExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
-        $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config/'));
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config/'));
         $loader->load('data.yml');
-        $loader->load('http_client.yml'); 
+        $loader->load('http_client.yml');
 
         $processor = new Processor();
         $config = $processor->processConfiguration(new Configuration(), $configs);
@@ -47,21 +48,38 @@ class SPDataExtension extends Extension
      */
     public function createResourceOwnerService(ContainerBuilder $container, $name, array $options)
     {
+        $definitionClassname = $this->getDefinitionClassname();
+
         // alias services
         if (isset($options['service'])) {
             // set the appropriate name for aliased services, compiler pass depends on it
-            $container->setAlias('sp_data.resource_owner.'.$name, $options['service']);
-        } else {
-            $type = $options['type'];
-            unset($options['type']);
+            $container->setAlias('sp_data.resource_owner.' . $name, new Alias($options['service'], true));
 
-            $definition = new DefinitionDecorator('sp_data.abstract_resource_owner.'.Configuration::getResourceOwnerType($type));
-            $definition->setClass("%sp_data.resource_owner.$type.class%");
-            $definition->replaceArgument(1, $options);
-            $definition->replaceArgument(2, $name);
-
-            $container->setDefinition('sp_data.resource_owner.'.$name, $definition);
+            return;
         }
+
+        $type = $options['type'];
+        unset($options['type']);
+
+        // handle external resource owners with given class
+        if (isset($options['class'])) {
+            if (!is_subclass_of($options['class'], ResourceOwnerInterface::class)) {
+                throw new InvalidConfigurationException(sprintf('Class "%s" must implement interface "SP\Bundle\DataBundle\Data\ResourceOwnerInterface".', $options['class']));
+            }
+
+            $definition = new $definitionClassname('sp_data.abstract_resource_owner.'.$type);
+            $definition->setClass($options['class']);
+            unset($options['class']);
+        } else {
+            $definition = new $definitionClassname('sp_data.abstract_resource_owner.'.Configuration::getResourceOwnerType($type));
+            $definition->setClass("%sp_data.resource_owner.$type.class%");
+        }
+
+        $definition->replaceArgument(2, $options);
+        $definition->replaceArgument(3, $name);
+        $definition->setPublic(true);
+
+        $container->setDefinition('sp_data.resource_owner.'.$name, $definition);
     }
 
     /**
@@ -70,28 +88,29 @@ class SPDataExtension extends Extension
     public function getAlias()
     {
         return 'sp_data';
-    }    /**
-    * @param ContainerBuilder $container
-    * @param array            $config
-    */
-   protected function createHttplugClient(ContainerBuilder $container, array $config)
-   {
-       $httpClientId = $config['http']['client'];
-       $httpMessageFactoryId = $config['http']['message_factory'];
-       $bundles = $container->getParameter('kernel.bundles');
+    }
+    /**
+     * @param ContainerBuilder $container
+     * @param array            $config
+     */
+    protected function createHttplugClient(ContainerBuilder $container, array $config)
+    {
+        $httpClientId = $config['http']['client'];
+        $httpMessageFactoryId = $config['http']['message_factory'];
+        $bundles = $container->getParameter('kernel.bundles');
 
-       if ('httplug.client.default' === $httpClientId && !isset($bundles['HttplugBundle'])) {
-           throw new InvalidConfigurationException(
-               'You must setup php-http/httplug-bundle to use the default http client service.'
-           );
-       }
-       if ('httplug.message_factory.default' === $httpMessageFactoryId && !isset($bundles['HttplugBundle'])) {
-           throw new InvalidConfigurationException(
-               'You must setup php-http/httplug-bundle to use the default http message factory service.'
-           );
-       }
+        if ('httplug.client.default' === $httpClientId && !isset($bundles['HttplugBundle'])) {
+            throw new InvalidConfigurationException(
+                'You must setup php-http/httplug-bundle to use the default http client service.'
+            );
+        }
+        if ('httplug.message_factory.default' === $httpMessageFactoryId && !isset($bundles['HttplugBundle'])) {
+            throw new InvalidConfigurationException(
+                'You must setup php-http/httplug-bundle to use the default http message factory service.'
+            );
+        }
 
-       $container->setAlias('sp_data.http.client', new Alias($config['http']['client'], true));
-       $container->setAlias('sp_data.http.message_factory', new Alias($config['http']['message_factory'], true));
-   }
+        $container->setAlias('sp_data.http.client', new Alias($config['http']['client'], true));
+        $container->setAlias('sp_data.http.message_factory', new Alias($config['http']['message_factory'], true));
+    }
 }
