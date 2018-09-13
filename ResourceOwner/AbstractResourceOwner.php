@@ -178,8 +178,6 @@ abstract class AbstractResourceOwner implements ResourceOwnerInterface
             $headers += array('If-None-Match' => $this->etag);
         }
 
-        $request = new httpRequest($method, $url, $headers, $content);
-
         try {
             return $this->httpClient->send(
                 $method,
