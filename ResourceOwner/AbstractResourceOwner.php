@@ -10,7 +10,6 @@ use SP\Bundle\DataBundle\Response\Analytic\PathResponse as PathAnalyticResponse;
 use SP\Bundle\DataBundle\Response\Data\DataResponseInterface;
 use Symfony\Component\HttpFoundation\Request as HttpRequest;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Security\Http\HttpUtils;
 
 abstract class AbstractResourceOwner implements ResourceOwnerInterface
 {
@@ -51,12 +50,10 @@ abstract class AbstractResourceOwner implements ResourceOwnerInterface
      */
     public function __construct(
         HttpMethodsClient $httpClient,
-        HttpUtils $httpUtils,
         array $options,
         $name
     ) {
         $this->httpClient = $httpClient;
-        $this->httpUtils = $httpUtils;
         $this->name = $name;
 
         if (!empty($options['paths'])) {
