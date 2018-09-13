@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Request as HttpRequest;
 class GenericOAuth2ResourceOwner extends AbstractResourceOwner
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getInformation(array $extraParameters = array())
     {
