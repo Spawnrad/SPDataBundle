@@ -42,7 +42,7 @@
     "suggest": {
         "doctrine/doctrine-bundle": "to use Doctrine user provider",
         "php-http/httplug-bundle": "to provide required HTTP client with ease.",
-        "symfony/property-access": "to use FOSUB integration with this bundle",
+        "symfony/property-access": "to use FOSUB integration with this bundle"
     },
     "autoload": {
         "psr-4": {
