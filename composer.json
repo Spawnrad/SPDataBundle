@@ -65,15 +65,7 @@
     },
     "autoload": {
         "psr-4": {
-            "HWI\\Bundle\\OAuthBundle\\": ""
-        },
-        "exclude-from-classmap": [
-            "/Tests/"
-        ]
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "HWI\\Bundle\\OAuthBundle\\Tests\\": "Tests/"
+            "SP\\Bundle\\DataBundle\\": ""
         }
     },
     "minimum-stability": "dev"

@@ -30,69 +30,14 @@ class Configuration implements ConfigurationInterface
      */
     private static $resourceOwners = array(
         'oauth2' => array(
-            'amazon',
-            'asana',
-            'auth0',
-            'azure',
-            'bitbucket2',
-            'bitly',
-            'box',
-            'bufferapp',
-            'clever',
-            'dailymotion',
-            'deviantart',
-            'deezer',
-            'disqus',
-            'eve_online',
-            'eventbrite',
             'facebook',
-            'fiware',
-            'foursquare',
-            'github',
-            'gitlab',
             'google',
             'youtube',
-            'hubic',
             'instagram',
-            'jawbone',
-            'linkedin',
-            'mailru',
-            'odnoklassniki',
-            'office365',
-            'paypal',
-            'qq',
-            'reddit',
-            'runkeeper',
-            'salesforce',
-            'sensio_connect',
-            'sina_weibo',
-            'slack',
-            'spotify',
-            'soundcloud',
-            'stack_exchange',
-            'strava',
-            'toshl',
-            'trakt',
             'twitch',
-            'vkontakte',
-            'windows_live',
-            'wordpress',
-            'wunderlist',
-            'yandex',
-            '37signals',
-            'itembase',
         ),
         'oauth1' => array(
-            'bitbucket',
-            'discogs',
-            'dropbox',
-            'flickr',
-            'jira',
-            'stereomood',
-            'trello',
             'twitter',
-            'xing',
-            'yahoo',
         ),
     );
 
@@ -425,41 +370,6 @@ class Configuration implements ConfigurationInterface
                     ->children()
                         ->scalarNode('client')->defaultValue('httplug.client.default')->end()
                         ->scalarNode('message_factory')->defaultValue('httplug.message_factory.default')->end()
-                    ->end()
-                ->end()
-            ->end()
-        ;
-    }
-
-    private function addConnectConfiguration(ArrayNodeDefinition $node)
-    {
-        $node
-            ->children()
-                ->arrayNode('connect')
-                    ->children()
-                        ->booleanNode('confirmation')->defaultTrue()->end()
-                        ->scalarNode('account_connector')->cannotBeEmpty()->end()
-                        ->scalarNode('registration_form_handler')->cannotBeEmpty()->end()
-                        ->scalarNode('registration_form')->cannotBeEmpty()->end()
-                    ->end()
-                ->end()
-            ->end()
-        ;
-    }
-
-    private function addFosubConfiguration(ArrayNodeDefinition $node)
-    {
-        $node
-            ->children()
-                ->arrayNode('fosub')
-                    ->children()
-                        ->scalarNode('username_iterations')->defaultValue(5)->cannotBeEmpty()->end()
-                        ->arrayNode('properties')
-                            ->isRequired()
-                            ->useAttributeAsKey('name')
-                                ->prototype('scalar')
-                            ->end()
-                        ->end()
                     ->end()
                 ->end()
             ->end()

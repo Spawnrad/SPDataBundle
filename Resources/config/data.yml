@@ -1,0 +1,43 @@
+parameters:
+    sp_data.resource_owner.youtube.video.class: SP\Data\ResourceOwner\Youtube\Video
+    sp_data.resource_owner.youtube.playlistitems.class: SP\Data\ResourceOwner\Youtube\PlaylistItems
+    sp_data.resource_owner.youtube.channel.class: SP\Data\ResourceOwner\Youtube\Channel
+    sp_data.resource_owner.youtube.analytic.class: SP\Data\ResourceOwner\Youtube\Analytic\Channel
+    sp_data.resource_owner.youtube.post.analytic.class: SP\Data\ResourceOwner\Youtube\Analytic\Post
+    sp_data.resource_owner.facebook.posts.class: SP\Data\ResourceOwner\Facebook\Posts
+    sp_data.resource_owner.facebook.post.class: SP\Data\ResourceOwner\Facebook\Post
+    sp_data.resource_owner.facebook.post.analytic.class: SP\Data\ResourceOwner\Facebook\Analytic\Post
+    sp_data.resource_owner.facebook.analytic.class: SP\Data\ResourceOwner\Facebook\Analytic\Channel
+    sp_data.resource_owner.twitter.posts.class: SP\Data\ResourceOwner\Twitter\Posts
+    sp_data.resource_owner.twitter.post.class: SP\Data\ResourceOwner\Twitter\Post
+    sp_data.resource_owner.twitter.analytic.class: SP\Data\ResourceOwner\Twitter\Analytic\Channel
+    sp_data.resource_owner.twitter.post.analytic.class: SP\Data\ResourceOwner\Twitter\Analytic\Post
+    sp_data.resource_owner.instagram.posts.class: SP\Data\ResourceOwner\Instagram\Posts
+    sp_data.resource_owner.instagram.post.class: SP\Data\ResourceOwner\Instagram\Post
+    sp_data.resource_owner.instagram.post.analytic.class: SP\Data\ResourceOwner\Instagram\Analytic\Post
+    sp_data.resource_owner.instagram.analytic.class: SP\Data\ResourceOwner\Instagram\Analytic\Channel
+
+services:
+    sp_data.utils.api_utils:
+        public: true
+        class: SP\Data\Utils\DataUtils
+        arguments:
+           - "@security.http_utils"
+        calls:
+            - [setContainer, ['@service_container']]
+
+    sp_data.abstract_resource_owner.generic:
+        public: true
+        abstract: true
+        arguments:
+           - "@sp_data.http_client"
+           - {}
+           -
+
+    sp_data.abstract_resource_owner.oauth1:
+        class: SP\Data\ResourceOwner\GenericOAuth1ResourceOwner
+        parent: "sp_data.abstract_resource_owner.generic"
+
+    sp_data.abstract_resource_owner.oauth2:
+        class: SP\Data\ResourceOwner\GenericOAuth1ResourceOwner
+        parent: "sp_data.abstract_resource_owner.generic"
