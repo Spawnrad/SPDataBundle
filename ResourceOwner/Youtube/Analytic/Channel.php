@@ -27,8 +27,8 @@ class Channel extends GenericOAuth2ResourceOwner
             $end_date = $now->format('Y-m-d');
 
             $youtube_parameters = ['ids' => 'channel==MINE',
-                                   'start-date' => $start_date,
-                                   'end-date' => $end_date];
+                                   'startDate' => $start_date,
+                                   'endDate' => $end_date];
 
             $extraParameters = array_merge($youtube_parameters, $extraParameters);
         }
@@ -44,7 +44,7 @@ class Channel extends GenericOAuth2ResourceOwner
         parent::configureOptions($resolver);
 
         $resolver->setDefaults(array(
-            'infos_url' => 'https://www.googleapis.com/youtube/analytics/v1/reports?metrics=viewerPercentage&dimensions=ageGroup',
+            'infos_url' => 'https://youtubeanalytics.googleapis.com/v2/reports?metrics=viewerPercentage&dimensions=ageGroup',
             'response_class' => 'SP\Bundle\DataBundle\Response\Data\PathResponse',
         ));
     }
