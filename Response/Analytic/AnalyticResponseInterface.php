@@ -11,7 +11,7 @@ interface AnalyticResponseInterface extends ResponseInterface
      *
      * @return string
      */
-    public function getId();
+    public function getUsername();
 
     /**
      * Get the ViewCount to display.

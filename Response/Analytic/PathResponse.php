@@ -23,7 +23,7 @@ class PathResponse extends AbstractResponse
         'error' => null,
     );
 
-    public function getId($level = null)
+    public function getUsername($level = null)
     {
         return $this->getValueForPath('identifier', $level);
     }
