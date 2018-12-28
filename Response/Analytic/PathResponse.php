@@ -9,6 +9,9 @@ class PathResponse extends AbstractResponse
      */
     protected $paths = array(
         'identifier' => null,
+        'followers' => null,
+        'profilepicture' => null,
+        'name' => null,
         'viewCount' => null,
         'commentCount' => null,
         'likeCount' => null,
@@ -23,6 +26,21 @@ class PathResponse extends AbstractResponse
     public function getId($level = null)
     {
         return $this->getValueForPath('identifier', $level);
+    }
+
+    public function getProfilePicture()
+    {
+        return $this->getValueForPath('profilepicture');
+    }
+
+    public function getFollowers()
+    {
+        return $this->getValueForPath('followers');
+    }    
+
+    public function getName()
+    {
+        return $this->getValueForPath('name');
     }
 
     public function getPagination()

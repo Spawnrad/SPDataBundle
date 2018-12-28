@@ -17,6 +17,9 @@ class GenericOAuth2ResourceOwner extends AbstractResourceOwner
         if (isset($extraParameters['postId'])) {
             $url = str_replace('{post-id}', $extraParameters['postId'], $this->options['infos_url']);
             unset($extraParameters['postId']);
+        } elseif(isset($extraParameters['instagramId'])) {
+            $url = str_replace('{instagram-id}', $extraParameters['instagramId'], $this->options['infos_url']);
+            unset($extraParameters['instagramId']);
         } else {
             $url = $this->options['infos_url'];
         }

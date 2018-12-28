@@ -11,9 +11,13 @@ class Channel extends GenericOAuth2ResourceOwner
      * {@inheritDoc}
      */
     protected $paths = array(
-        'subscriberCount' => 'data.counts.followed_by',
-        'postCount'       => 'data.counts.media',
-        'error'           => 'meta.error_message',
+        'identifier' => 'id',
+        'followers' => 'followers_count',
+        'profilepicture' => 'profile_picture_url',
+        'name' => 'username',
+        'items'         => 'data.0.values',
+        'item_name'     => 'data.0.name',
+        'error'         => 'error.message'
     );
 
     /**
@@ -24,12 +28,8 @@ class Channel extends GenericOAuth2ResourceOwner
         parent::configureOptions($resolver);
 
         $resolver->setDefaults(array(
-            'infos_url'                 => 'https://api.instagram.com/v1/users/self',
+            'infos_url'      => 'https://graph.facebook.com/v3.0/{instagram-id}',
             'response_class' => 'SP\Bundle\DataBundle\Response\Analytic\PathResponse',
-
-            // Instagram supports authentication with only one defined URL
-            'auth_with_one_url'        => true,
-            'use_bearer_authorization' => false,
         ));
     }
 }

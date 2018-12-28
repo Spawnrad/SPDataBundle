@@ -61,4 +61,10 @@ interface AnalyticResponseInterface extends ResponseInterface
      * @return array
      */
     public function getPagination();
+
+    public function getFollowers();
+
+    public function getProfilePicture();
+
+    public function getName();
 }
