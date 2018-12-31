@@ -11,15 +11,14 @@ class Post extends GenericOAuth2ResourceOwner
      * {@inheritDoc}
      */
     protected $paths = array(
-        'identifier' => 'data.0.id',
-        'viewCount' => null,
-        'commentCount' => 'data.0.comments.count',
-        'likeCount' => 'data.0.likes.count',
+        'identifier' => 'id',
+        'viewCount' => 'insights.data.0.values.0.value',
+        'commentCount' => 'comments_count',
+        'likeCount' => 'like_count',
         'shareCount' => null,
-        'error' => 'meta.error_message',
         'items' => 'data',
-        'error' => 'meta.error_message',
-        'pagination' => 'pagination'
+        'error' => 'error.message',
+        'pagination' => 'paging.cursors.after'
     );
 
     /**
@@ -30,13 +29,8 @@ class Post extends GenericOAuth2ResourceOwner
         parent::configureOptions($resolver);
 
         $resolver->setDefaults(array(
-            'infos_url' => 'https://api.instagram.com/v1/media/{post-id}',
+            'infos_url' => 'https://graph.facebook.com/{post-id}',
             'response_class' => 'SP\Bundle\DataBundle\Response\Analytic\PathResponse',
-
-            // Instagram supports authentication with only one defined URL
-            'auth_with_one_url' => true,
-
-            'use_bearer_authorization' => false,
         ));
     }
 }

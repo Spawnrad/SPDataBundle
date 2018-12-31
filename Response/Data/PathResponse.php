@@ -11,6 +11,7 @@ class PathResponse extends AbstractResponse
         'identifier' => null,
         'title' => null,
         'description' => null,
+        'shortcode' => null,
         'link' => null,
         'thumbnail' => null,
         'publishedAt' => null,
@@ -63,6 +64,11 @@ class PathResponse extends AbstractResponse
     public function getItems()
     {
         return $this->getValueForPath('items');
+    }
+
+    public function getShortCode()
+    {
+        return $this->getValueForPath('shortcode');
     }
 
     public function getError()

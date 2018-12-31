@@ -35,6 +35,13 @@ interface DataResponseInterface extends ResponseInterface
     public function getLink();
 
     /**
+     * Get the shortcode to display.
+     *
+     * @return string
+     */
+    public function getShortCode();    
+
+    /**
      * Get the thumbnail to display.
      *
      * @return string
