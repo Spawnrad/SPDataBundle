@@ -14,6 +14,7 @@ class Channel extends GenericOAuth2ResourceOwner
         'identifier' => 'id',
         'subscriberCount' => 'followers_count',
         'postCount' => 'media_count',
+        'followers' => 'followers_count',
         'profilepicture' => 'profile_picture_url',
         'name' => 'username',
         'items'         => 'data.0.values',
