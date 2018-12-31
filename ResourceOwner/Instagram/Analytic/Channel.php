@@ -12,7 +12,8 @@ class Channel extends GenericOAuth2ResourceOwner
      */
     protected $paths = array(
         'identifier' => 'id',
-        'followers' => 'followers_count',
+        'subscriberCount' => 'followers_count',
+        'postCount' => 'media_count',
         'profilepicture' => 'profile_picture_url',
         'name' => 'username',
         'items'         => 'data.0.values',
