@@ -68,7 +68,7 @@ class PathResponse extends AbstractResponse
 
     public function getShortCode($level = null)
     {
-        return $this->getValueForPath('shortcode');
+        return $this->getValueForPath('shortcode', $level);
     }
 
     public function getError()
