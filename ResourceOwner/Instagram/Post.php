@@ -21,7 +21,6 @@ class Post extends GenericOAuth2ResourceOwner
         'userId' => 'owner.id',
         'items' => null,
         'error' => 'error.message',
-        'pagination' => 'paging.cursors.after'
     );
 
     /**

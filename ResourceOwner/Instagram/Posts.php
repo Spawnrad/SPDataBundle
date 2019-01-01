@@ -19,6 +19,7 @@ class Posts extends GenericOAuth2ResourceOwner
         'publishedAt' => 'data.0.timestamp',
         'items' => 'data',
         'error' => 'error.message',
+        'pagination' => 'paging.cursors.after'
     );
 
     /**
