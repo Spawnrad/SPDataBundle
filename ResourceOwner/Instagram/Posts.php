@@ -18,6 +18,7 @@ class Posts extends GenericOAuth2ResourceOwner
         'link' => 'data.0.permalink',
         'thumbnail' => 'data.0.media_url',
         'publishedAt' => 'data.0.timestamp',
+        'userId' => 'owner.id',        
         'items' => 'data',
         'error' => 'error.message',
         'pagination' => 'paging.cursors.after'
