@@ -22,6 +22,8 @@ class Configuration implements ConfigurationInterface
             'facebook',
             'youtube',
             'instagram',
+            'google',
+            'twitch'
         ),
         'oauth1' => array(
             'twitter',
