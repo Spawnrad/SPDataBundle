@@ -34,8 +34,10 @@ class Channel extends GenericOAuth2ResourceOwner
                         [
                             'expression' => 'ga:users',
                         ],
+                    ],
+                    'dimensions' => [
                         [
-                            'expression' => 'ga:pageviews'
+                            'name' => 'ga:userGender',
                         ],
                     ],
                 ],

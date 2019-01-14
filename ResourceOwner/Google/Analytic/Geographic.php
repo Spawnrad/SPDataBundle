@@ -23,7 +23,7 @@ class Channel extends GenericOAuth2ResourceOwner
         $content = [
             'reportRequests' => [
                 [
-                    'viewId' => $extraParameters['viewId'],
+                    'viewId' => '62414894',
                     'dateRanges' => [
                         [
                             'startDate' => '30daysAgo',
@@ -34,10 +34,19 @@ class Channel extends GenericOAuth2ResourceOwner
                         [
                             'expression' => 'ga:users',
                         ],
+                    ],
+                    'dimensions' => [
                         [
-                            'expression' => 'ga:pageviews'
+                            'name' => 'ga:countryIsoCode',
                         ],
                     ],
+                    "orderBys" => [
+                        [
+                            'fieldName' => 'ga:users',
+                            'sortOrder' => 'DESCENDING'
+                        ],
+                    ],
+                    'pageSize' => 5,
                 ],
             ],
         ];

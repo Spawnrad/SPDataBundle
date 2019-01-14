@@ -17,6 +17,9 @@ parameters:
     sp_data.resource_owner.instagram.post.analytic.class: SP\Bundle\DataBundle\ResourceOwner\Instagram\Analytic\Post
     sp_data.resource_owner.instagram.analytic.class: SP\Bundle\DataBundle\ResourceOwner\Instagram\Analytic\Channel
     sp_data.resource_owner.google.analytic.class: SP\Bundle\DataBundle\ResourceOwner\Google\Analytic\Channel
+    sp_data.resource_owner.google.analytic.geographic.class: SP\Bundle\DataBundle\ResourceOwner\Google\Analytic\Geographic
+    sp_data.resource_owner.google.analytic.demographic.class: SP\Bundle\DataBundle\ResourceOwner\Google\Analytic\Demographic
+    sp_data.resource_owner.google.analytic.gender.class: SP\Bundle\DataBundle\ResourceOwner\Google\Analytic\Gender
 
 services:
     sp_data.utils.api_utils:
