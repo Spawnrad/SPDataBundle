@@ -5,7 +5,7 @@ namespace SP\Bundle\DataBundle\ResourceOwner\Google\Analytic;
 use SP\Bundle\DataBundle\ResourceOwner\GenericOAuth2ResourceOwner;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class Channel extends GenericOAuth2ResourceOwner
+class Demographic extends GenericOAuth2ResourceOwner
 {
     /**
      * {@inheritDoc}
