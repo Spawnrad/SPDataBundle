@@ -20,7 +20,7 @@ class Geographic extends GenericOAuth2ResourceOwner
      */
     public function getInformation(array $extraParameters = array(), $content = null)
     {
-        $content = [
+        $content = json_encode([
             'reportRequests' => [
                 [
                     'viewId' => '62414894',
@@ -49,7 +49,7 @@ class Geographic extends GenericOAuth2ResourceOwner
                     'pageSize' => 5,
                 ],
             ],
-        ];
+        ]);
 
         unset($extraParameters['viewId']);
 

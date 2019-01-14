@@ -20,7 +20,7 @@ class Demographic extends GenericOAuth2ResourceOwner
      */
     public function getInformation(array $extraParameters = array(), $content = null)
     {
-        $content = [
+        $content = json_encode([
             'reportRequests' => [
                 [
                     'viewId' => $extraParameters['viewId'],
@@ -42,7 +42,7 @@ class Demographic extends GenericOAuth2ResourceOwner
                     ],
                 ],
             ],
-        ];
+        ]);
 
         unset($extraParameters['viewId']);
 
