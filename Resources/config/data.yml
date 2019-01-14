@@ -16,6 +16,7 @@ parameters:
     sp_data.resource_owner.instagram.post.class: SP\Bundle\DataBundle\ResourceOwner\Instagram\Post
     sp_data.resource_owner.instagram.post.analytic.class: SP\Bundle\DataBundle\ResourceOwner\Instagram\Analytic\Post
     sp_data.resource_owner.instagram.analytic.class: SP\Bundle\DataBundle\ResourceOwner\Instagram\Analytic\Channel
+    sp_data.resource_owner.google.channel.class: SP\Bundle\DataBundle\ResourceOwner\Google\Analytic\Channel
 
 services:
     sp_data.utils.api_utils:

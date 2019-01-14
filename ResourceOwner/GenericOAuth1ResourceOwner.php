@@ -3,8 +3,8 @@
 namespace SP\Bundle\DataBundle\ResourceOwner;
 
 use SP\Bundle\DataBundle\Utils\DataUtils;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\HttpFoundation\Request as HttpRequest;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class GenericOAuth1ResourceOwner extends AbstractResourceOwner
 {
@@ -13,7 +13,7 @@ class GenericOAuth1ResourceOwner extends AbstractResourceOwner
     /**
      * {@inheritdoc}
      */
-    public function getInformation(array $extraParameters = array())
+    public function getInformation(array $extraParameters = array(), $content = null)
     {
         $parameters = array(
             'oauth_consumer_key' => $this->options['client_id'],

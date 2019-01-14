@@ -2,37 +2,37 @@
 
 namespace SP\Bundle\DataBundle\ResourceOwner;
 
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\HttpFoundation\Request as HttpRequest;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class GenericOAuth2ResourceOwner extends AbstractResourceOwner
 {
     /**
      * {@inheritdoc}
      */
-    public function getInformation(array $extraParameters = array())
+    public function getInformation(array $extraParameters = array(), $content = null)
     {
         $headers = $this->getHeaderInformation();
 
         if (isset($extraParameters['postId'])) {
             $url = str_replace('{post-id}', $extraParameters['postId'], $this->options['infos_url']);
             unset($extraParameters['postId']);
-        } elseif(isset($extraParameters['instagramId'])) {
+        } elseif (isset($extraParameters['instagramId'])) {
             $url = str_replace('{instagram-id}', $extraParameters['instagramId'], $this->options['infos_url']);
             unset($extraParameters['instagramId']);
         } else {
             $url = $this->options['infos_url'];
         }
         if ($this->options['use_bearer_authorization']) {
-            $content = $this->httpRequest($this->normalizeUrl($url, $extraParameters), null, $headers);
+            $result = $this->httpRequest($this->normalizeUrl($url, $extraParameters), $content, $headers);
         } else {
-            $content = $this->httpRequest($this->normalizeUrl($url, array_merge($headers, $extraParameters)));
+            $result = $this->httpRequest($this->normalizeUrl($url, array_merge($headers, $extraParameters)), $content);
         }
         $response = $this->getDataResponse();
-        $response->setResponse($content->getBody());
-        $response->setStatusCode($content->getStatusCode());
-        if ($content->getHeader('Etag')) {
-            $response->setEtag($content->getHeader('Etag')[0]);
+        $response->setResponse($result->getBody());
+        $response->setStatusCode($result->getStatusCode());
+        if ($result->getHeader('Etag')) {
+            $response->setEtag($result->getHeader('Etag')[0]);
         }
         $response->setResourceOwner($this);
         return $response;

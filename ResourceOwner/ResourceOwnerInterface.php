@@ -20,7 +20,7 @@ interface ResourceOwnerInterface
      *
      * @return ResponseInterface The wrapped response interface.
      */
-    public function getInformation(array $extraParameters = array());
+    public function getInformation(array $extraParameters = array(), $content = null);
 
     /**
      * Return a name for the resource owner.

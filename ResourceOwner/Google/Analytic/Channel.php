@@ -1,6 +1,6 @@
 <?php
 
-namespace SP\Bundle\DataBundle\ResourceOwner\Youtube\Analytic;
+namespace SP\Bundle\DataBundle\ResourceOwner\Google\Analytic;
 
 use SP\Bundle\DataBundle\ResourceOwner\GenericOAuth2ResourceOwner;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -20,20 +20,17 @@ class Channel extends GenericOAuth2ResourceOwner
      */
     public function getInformation(array $extraParameters = array(), $content = null)
     {
-        if (!$extraParameters) {
-            $now = new \DateTime();
+        // $start_date = '30daysAgo';
+        // $end_date = 'yesterday';
 
-            $start_date = '2005-01-01';
-            $end_date = $now->format('Y-m-d');
+        // $dateRanges = [
+        //     'startDate' => $start_date,
+        //     'endDate' => $end_date,
+        // ];
 
-            $youtube_parameters = ['ids' => 'channel==MINE',
-                                   'startDate' => $start_date,
-                                   'endDate' => $end_date];
+        // $content['dateRanges'] = $dateRanges;
 
-            $extraParameters = array_merge($youtube_parameters, $extraParameters);
-        }
-
-        return parent::getInformation($extraParameters);
+        return parent::getInformation($extraParameters, $content);
     }
 
     /**
@@ -44,7 +41,7 @@ class Channel extends GenericOAuth2ResourceOwner
         parent::configureOptions($resolver);
 
         $resolver->setDefaults(array(
-            'infos_url' => 'https://youtubeanalytics.googleapis.com/v2/reports?metrics=viewerPercentage&dimensions=ageGroup',
+            'infos_url' => 'https://analyticsreporting.googleapis.com/v4/reports:batchGet',
             'response_class' => 'SP\Bundle\DataBundle\Response\Data\PathResponse',
         ));
     }
