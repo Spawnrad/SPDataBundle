@@ -23,7 +23,7 @@ class Geographic extends GenericOAuth2ResourceOwner
         $content = json_encode([
             'reportRequests' => [
                 [
-                    'viewId' => '62414894',
+                    'viewId' => $extraParameters['viewId'],
                     'dateRanges' => [
                         [
                             'startDate' => '30daysAgo',
