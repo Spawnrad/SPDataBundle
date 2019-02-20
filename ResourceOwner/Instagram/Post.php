@@ -12,7 +12,7 @@ class Post extends GenericOAuth2ResourceOwner
      */
     protected $paths = array(
         'identifier' => 'id',
-        'title' => null,
+        'title' => 'media_type',
         'description' => 'caption',
         'link' => 'permalink',
         'shortcode' => 'shortcode',
