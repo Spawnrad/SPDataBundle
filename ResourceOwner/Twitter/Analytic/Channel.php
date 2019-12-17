@@ -12,6 +12,7 @@ class Channel extends GenericOAuth1ResourceOwner
      */
     protected $paths = array(
         'subscriberCount' => 'followers_count',
+        'postCount' => 'statuses_count',
         'error'       => 'errors.0.message'
     );
 
