@@ -77,9 +77,9 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $builder = new TreeBuilder();
+        $builder = new TreeBuilder('sp_data');
 
-        $rootNode = $builder->root('sp_data');
+        $rootNode = $builder->getRootNode();
 
         $this->addHttpClientConfiguration($rootNode);
         $this->addResourceOwnersConfiguration($rootNode);
