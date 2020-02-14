@@ -3,34 +3,50 @@
 namespace SP\Bundle\DataBundle\Utils;
 
 use SP\Bundle\DataBundle\ResourceOwner\ResourceOwnerInterface;
-use SP\Bundle\DataBundle\Utils\ResourceOwnerMap;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use SP\Bundle\DataBundle\Utils\ResourceOwnerMapInterface;
+use Symfony\Component\HttpFoundation\Request;
 
-class DataUtils implements ContainerAwareInterface
+class DataUtils
 {
-    const SIGNATURE_METHOD_HMAC = 'HMAC-SHA1';
-    const SIGNATURE_METHOD_RSA = 'RSA-SHA1';
-    const SIGNATURE_METHOD_PLAINTEXT = 'PLAINTEXT';
+    public const SIGNATURE_METHOD_HMAC = 'HMAC-SHA1';
+    public const SIGNATURE_METHOD_RSA = 'RSA-SHA1';
+    public const SIGNATURE_METHOD_PLAINTEXT = 'PLAINTEXT';
 
     /**
-     * @var ContainerInterface
+     * @var ResourceOwnerMapInterface[]
      */
-    protected $container;
+    protected $ownerMaps = [];
 
-    public function setContainer(ContainerInterface $container = null)
+    /**
+     * @param ResourceOwnerMapInterface $ownerMap
+     */
+    public function addResourceOwnerMap(ResourceOwnerMapInterface $ownerMap)
     {
-        $this->container = $container;
+        $this->ownerMaps[] = $ownerMap;
     }
 
     /**
-     * Sign the request parameters
+     * @return array
+     */
+    public function getResourceOwners()
+    {
+        $resourceOwners = [];
+
+        foreach ($this->ownerMaps as $ownerMap) {
+            $resourceOwners = array_merge($resourceOwners, $ownerMap->getResourceOwners());
+        }
+
+        return array_keys($resourceOwners);
+    }    
+
+    /**
+     * Sign the request parameters.
      *
-     * @param string $method Request method
-     * @param string $url Request url
-     * @param array $parameters Parameters for the request
-     * @param string $clientSecret Client secret to use as key part of signing
-     * @param string $tokenSecret Optional token secret to use with signing
+     * @param string $method          Request method
+     * @param string $url             Request url
+     * @param array  $parameters      Parameters for the request
+     * @param string $clientSecret    Client secret to use as key part of signing
+     * @param string $tokenSecret     Optional token secret to use with signing
      * @param string $signatureMethod Optional signature method used to sign token
      *
      * @return string
@@ -40,7 +56,7 @@ class DataUtils implements ContainerAwareInterface
     public static function signRequest($method, $url, $parameters, $clientSecret, $tokenSecret = '', $signatureMethod = self::SIGNATURE_METHOD_HMAC)
     {
         // Validate required parameters
-        foreach (array('oauth_consumer_key', 'oauth_timestamp', 'oauth_nonce', 'oauth_version', 'oauth_signature_method') as $parameter) {
+        foreach (['oauth_consumer_key', 'oauth_timestamp', 'oauth_nonce', 'oauth_version', 'oauth_signature_method'] as $parameter) {
             if (!isset($parameters[$parameter])) {
                 throw new \RuntimeException(sprintf('Parameter "%s" must be set.', $parameter));
             }
@@ -61,46 +77,51 @@ class DataUtils implements ContainerAwareInterface
 
         // Remove default ports
         // Ref: Spec: 9.1.2
-        $explicitPort = isset($url['port']) ? $url['port'] : null;
+        $explicitPort = $url['port'] ?? null;
         if (('https' === $url['scheme'] && 443 === $explicitPort) || ('http' === $url['scheme'] && 80 === $explicitPort)) {
             $explicitPort = null;
         }
 
         // Remove query params from URL
         // Ref: Spec: 9.1.2
-        $url = sprintf('%s://%s%s%s', $url['scheme'], $url['host'], ($explicitPort ? ':' . $explicitPort : ''), isset($url['path']) ? $url['path'] : '');
+        $url = sprintf('%s://%s%s%s', $url['scheme'], $url['host'], ($explicitPort ? ':'.$explicitPort : ''), $url['path'] ?? '');
 
         // Parameters are sorted by name, using lexicographical byte value ordering.
         // Ref: Spec: 9.1.1 (1)
         uksort($parameters, 'strcmp');
 
         // http_build_query should use RFC3986
-        $parts = array(
+        $parts = [
             // HTTP method name must be uppercase
             // Ref: Spec: 9.1.3 (1)
             strtoupper($method),
             rawurlencode($url),
-            rawurlencode(str_replace(array('%7E', '+'), array('~', '%20'), http_build_query($parameters, '', '&'))),
-        );
+            rawurlencode(str_replace(['%7E', '+'], ['~', '%20'], http_build_query($parameters, '', '&'))),
+        ];
 
         $baseString = implode('&', $parts);
 
         switch ($signatureMethod) {
             case self::SIGNATURE_METHOD_HMAC:
-                $keyParts = array(
+                $keyParts = [
                     rawurlencode($clientSecret),
                     rawurlencode($tokenSecret),
-                );
+                ];
 
                 $signature = hash_hmac('sha1', $baseString, implode('&', $keyParts), true);
                 break;
 
             case self::SIGNATURE_METHOD_RSA:
-                if (!function_exists('openssl_pkey_get_private')) {
+                if (!\function_exists('openssl_pkey_get_private')) {
                     throw new \RuntimeException('RSA-SHA1 signature method requires the OpenSSL extension.');
                 }
 
-                $privateKey = openssl_pkey_get_private(file_get_contents($clientSecret), $tokenSecret);
+                if (0 === strpos($clientSecret, '-----BEGIN')) {
+                    $privateKey = openssl_pkey_get_private($clientSecret, $tokenSecret);
+                } else {
+                    $privateKey = openssl_pkey_get_private(file_get_contents($clientSecret), $tokenSecret);
+                }
+
                 $signature = false;
 
                 openssl_sign($baseString, $signature, $privateKey);
@@ -125,31 +146,31 @@ class DataUtils implements ContainerAwareInterface
      *
      * @throws \RuntimeException
      */
-    public function getResourceOwner($name)
+    protected function getResourceOwner($name)
     {
-        $resourceOwner = null;
-
-        $resourceOwner = $this->getResourceOwnerByName($name);
-        if ($resourceOwner instanceof ResourceOwnerInterface) {
-            return $resourceOwner;
+        foreach ($this->ownerMaps as $ownerMap) {
+            $resourceOwner = $ownerMap->getResourceOwnerByName($name);
+            if ($resourceOwner instanceof ResourceOwnerInterface) {
+                return $resourceOwner;
+            }
         }
 
-        if (!$resourceOwner instanceof ResourceOwnerInterface) {
-            throw new \RuntimeException(sprintf("No resource owner with name '%s'.", $name));
-        }
-
-        return $resourceOwner;
+        throw new \RuntimeException(sprintf("No resource owner with name '%s'.", $name));
     }
 
     /**
-     * Gets the appropriate resource owner given the name.
-     *
      * @param string $name
      *
-     * @return null|ResourceOwnerInterface
+     * @return string|null
      */
-    protected function getResourceOwnerByName($name)
+    protected function getResourceOwnerCheckPath($name)
     {
-        return $this->container->get('sp_data.resource_owner.' . $name);
+        foreach ($this->ownerMaps as $ownerMap) {
+            if ($potentialResourceOwnerCheckPath = $ownerMap->getResourceOwnerCheckPath($name)) {
+                return $potentialResourceOwnerCheckPath;
+            }
+        }
+
+        return null;
     }
 }

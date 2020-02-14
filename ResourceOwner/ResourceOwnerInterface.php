@@ -5,7 +5,7 @@ namespace SP\Bundle\DataBundle\ResourceOwner;
 use SP\Bundle\DataBundle\Response\ResponseInterface;
 
 /**
- * ResourceOwnerInterface
+ * ResourceOwnerInterface.
  *
  * @author Geoffrey Bachelet <geoffrey.bachelet@gmail.com>
  * @author Alexander <iam.asm89@gmail.com>
@@ -13,14 +13,10 @@ use SP\Bundle\DataBundle\Response\ResponseInterface;
 interface ResourceOwnerInterface
 {
     /**
-     * Retrieves the user's information from an access_token
-     *
-     * @param string $accessToken     The access token
-     * @param array $extraParameters An array of parameters to add to the url
-     *
-     * @return ResponseInterface The wrapped response interface.
+     * Retrieves the user's information from an access_token.
+     * @return ResponseInterface the wrapped response interface
      */
-    public function getInformation(array $extraParameters = array(), $content = null);
+    public function getInformation(array $extraParameters = [], array $content = null);
 
     /**
      * Return a name for the resource owner.
@@ -30,7 +26,7 @@ interface ResourceOwnerInterface
     public function getName();
 
     /**
-     * Retrieve an option by name
+     * Retrieve an option by name.
      *
      * @param string $name The option name
      *

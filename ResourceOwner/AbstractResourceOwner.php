@@ -4,29 +4,44 @@ namespace SP\Bundle\DataBundle\ResourceOwner;
 
 use Http\Client\Common\HttpMethodsClient;
 use Http\Client\Exception;
+use Psr\Http\Message\ResponseInterface;
 use SP\Bundle\DataBundle\Exception\HttpTransportException;
-use SP\Bundle\DataBundle\Response\Data\PathResponse as PathDataResponse;
+use SP\Bundle\DataBundle\OAuth\ResourceOwnerInterface;
 use SP\Bundle\DataBundle\Response\Analytic\PathResponse as PathAnalyticResponse;
 use SP\Bundle\DataBundle\Response\Data\DataResponseInterface;
-use Symfony\Component\HttpFoundation\Request as HttpRequest;
+use SP\Bundle\DataBundle\Response\Data\PathResponse as PathDataResponse;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Http\HttpUtils;
 
+/**
+ * AbstractResourceOwner.
+ *
+ * @author Geoffrey Bachelet <geoffrey.bachelet@gmail.com>
+ * @author Alexander <iam.asm89@gmail.com>
+ * @author Francisco Facioni <fran6co@gmail.com>
+ * @author Joseph Bielawski <stloyd@gmail.com>
+ */
 abstract class AbstractResourceOwner implements ResourceOwnerInterface
 {
     /**
      * @var array
      */
-    protected $options = array();
+    protected $options = [];
 
     /**
      * @var array
      */
-    protected $paths = array();
+    protected $paths = [];
 
     /**
-     * @var HttpClientInterface
+     * @var HttpMethodsClient
      */
     protected $httpClient;
+
+    /**
+     * @var HttpUtils
+     */
+    protected $httpUtils;
 
     /**
      * @var string
@@ -44,16 +59,18 @@ abstract class AbstractResourceOwner implements ResourceOwnerInterface
     protected $etag;
 
     /**
-     * @param HttpClientInterface $httpClient Buzz http client
-     * @param array $options Options for the resource owner
-     * @param string $name Name for the resource owner
+     * @param HttpMethodsClient           $httpClient Httplug client
+     * @param HttpUtils                   $httpUtils  Http utils
+     * @param array                       $options    Options for the resource owner
+     * @param string                      $name       Name for the resource owner
      */
     public function __construct(
         HttpMethodsClient $httpClient,
+        HttpUtils $httpUtils,
         array $options,
-        $name
-    ) {
+        $name) {
         $this->httpClient = $httpClient;
+        $this->httpUtils = $httpUtils;
         $this->name = $name;
 
         if (!empty($options['paths'])) {
@@ -103,7 +120,7 @@ abstract class AbstractResourceOwner implements ResourceOwnerInterface
      */
     public function getOption($name)
     {
-        if (!array_key_exists($name, $this->options)) {
+        if (!\array_key_exists($name, $this->options)) {
             throw new \InvalidArgumentException(sprintf('Unknown option "%s"', $name));
         }
 
@@ -135,11 +152,11 @@ abstract class AbstractResourceOwner implements ResourceOwnerInterface
 
     /**
      * @param string $url
-     * @param array $parameters
+     * @param array  $parameters
      *
      * @return string
      */
-    protected function normalizeUrl($url, array $parameters = array())
+    protected function normalizeUrl($url, array $parameters = [])
     {
         $normalizedUrl = $url;
         if (!empty($parameters)) {
@@ -161,16 +178,18 @@ abstract class AbstractResourceOwner implements ResourceOwnerInterface
      *
      * @return ResponseInterface The response content
      */
-    protected function httpRequest($url, $content = null, $headers = [], $method = null)
+    protected function httpRequest($url, $content = null, array $headers = [], $method = null)
     {
         if (null === $method) {
             $method = null === $content || '' === $content ? 'GET' : 'POST';
         }
 
-        $headers += array('User-Agent' => 'SPDataBundle (https://github.com/spawnrad/SPDataBundle)');
-        if (is_string($content)) {
-            $headers += array('Content-Length' => (string)strlen($content));
-        } elseif (is_array($content)) {
+        $headers += ['User-Agent' => 'SPDataBundle (https://github.com/spawnrad/SPDataBundle)'];
+        if (\is_string($content)) {
+            if (!isset($headers['Content-Length'])) {
+                $headers += ['Content-Length' => (string) \strlen($content)];
+            }
+        } elseif (\is_array($content)) {
             $content = http_build_query($content, '', '&');
         }
 
@@ -193,16 +212,16 @@ abstract class AbstractResourceOwner implements ResourceOwnerInterface
     /**
      * Get the 'parsed' content based on the response headers.
      *
-     * @param Response $rawResponse
+     * @param ResponseInterface $rawResponse
      *
      * @return array
      */
-    protected function getResponseContent(Response $rawResponse)
+    protected function getResponseContent(ResponseInterface $rawResponse)
     {
         // First check that content in response exists, due too bug: https://bugs.php.net/bug.php?id=54484
         $content = (string) $rawResponse->getBody();
         if (!$content) {
-            return array();
+            return [];
         }
 
         $response = json_decode($content, true);
@@ -220,7 +239,7 @@ abstract class AbstractResourceOwner implements ResourceOwnerInterface
      */
     protected function generateNonce()
     {
-        return md5(microtime(true).uniqid('', true));
+        return md5(microtime(true) . uniqid('', true));
     }
 
     public function getAccessToken()
@@ -251,14 +270,14 @@ abstract class AbstractResourceOwner implements ResourceOwnerInterface
 
     /**
      * @param string $url
-     * @param array $parameters
+     * @param array  $parameters
      *
-     * @return HttpResponse
+     * @return ResponseInterface
      */
-    abstract protected function doGetInformationRequest($url, array $parameters = array());
+    abstract protected function doGetInformationRequest($url, array $parameters = []);
 
     /**
-     * Configure the option resolver
+     * Configure the option resolver.
      *
      * @param OptionsResolver $resolver
      */

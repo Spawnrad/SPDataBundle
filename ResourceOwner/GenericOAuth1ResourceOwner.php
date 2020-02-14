@@ -3,7 +3,6 @@
 namespace SP\Bundle\DataBundle\ResourceOwner;
 
 use SP\Bundle\DataBundle\Utils\DataUtils;
-use Symfony\Component\HttpFoundation\Request as HttpRequest;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class GenericOAuth1ResourceOwner extends AbstractResourceOwner
@@ -15,20 +14,21 @@ class GenericOAuth1ResourceOwner extends AbstractResourceOwner
      */
     public function getInformation(array $extraParameters = array(), $content = null)
     {
-        $parameters = array(
+        $parameters = [
             'oauth_consumer_key' => $this->options['client_id'],
             'oauth_timestamp' => time(),
             'oauth_nonce' => $this->generateNonce(),
             'oauth_version' => '1.0',
             'oauth_signature_method' => $this->options['signature_method'],
             'oauth_token' => $this->access_token,
-        );
+        ];
 
         if ($extraParameters) {
             $url = $this->normalizeUrl($this->options['infos_url'], $extraParameters);
         } else {
             $url = $this->options['infos_url'];
         }
+
         $parameters['oauth_signature'] = DataUtils::signRequest(
             'GET',
             $url,
@@ -55,7 +55,7 @@ class GenericOAuth1ResourceOwner extends AbstractResourceOwner
     /**
      * {@inheritdoc}
      */
-    protected function httpRequest($url, $content = null, $parameters = array(), $headers = array(), $method = null)
+    protected function httpRequest($url, $content = null, array $parameters = [], array $headers = [], $method = null)
     {
         foreach ($parameters as $key => $value) {
             $parameters[$key] = $key . '="' . rawurlencode($value) . '"';
@@ -65,7 +65,7 @@ class GenericOAuth1ResourceOwner extends AbstractResourceOwner
             array_unshift($parameters, 'realm="' . rawurlencode($this->options['realm']) . '"');
         }
 
-        $headers = array('Authorization' => 'OAuth ' . implode(', ', $parameters));
+        $headers['Authorization'] = 'OAuth ' . implode(', ', $parameters);
 
         return parent::httpRequest($url, $content, $headers, $method);
     }
@@ -73,11 +73,10 @@ class GenericOAuth1ResourceOwner extends AbstractResourceOwner
     /**
      * {@inheritdoc}
      */
-    protected function doGetInformationRequest($url, array $parameters = array())
+    protected function doGetUserInformationRequest($url, array $parameters = [])
     {
-        return $this->httpRequest($url, null, $parameters);
+        return $this->httpRequest($url, null, [], null, $parameters);
     }
-
     /**
      * {@inheritdoc}
      */
@@ -85,17 +84,17 @@ class GenericOAuth1ResourceOwner extends AbstractResourceOwner
     {
         parent::configureOptions($resolver);
 
-        $resolver->setRequired(array(
+        $resolver->setRequired([
             'client_id',
             'client_secret',
-        ));
+        ]);
 
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'realm' => null,
             'signature_method' => 'HMAC-SHA1',
-        ));
+        ]);
 
-        $resolver->setAllowedValues('signature_method', array('HMAC-SHA1', 'RSA-SHA1', 'PLAINTEXT'));
+        $resolver->setAllowedValues('signature_method', ['HMAC-SHA1', 'RSA-SHA1', 'PLAINTEXT']);
     }
 
     public function getAccessTokenSecret()

@@ -2,7 +2,6 @@
 
 namespace SP\Bundle\DataBundle\ResourceOwner;
 
-use Symfony\Component\HttpFoundation\Request as HttpRequest;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class GenericOAuth2ResourceOwner extends AbstractResourceOwner
@@ -10,7 +9,7 @@ class GenericOAuth2ResourceOwner extends AbstractResourceOwner
     /**
      * {@inheritdoc}
      */
-    public function getInformation(array $extraParameters = array(), $content = null)
+    public function getInformation(array $extraParameters = [], $content = null)
     {
         $headers = $this->getHeaderInformation();
 
@@ -54,30 +53,30 @@ class GenericOAuth2ResourceOwner extends AbstractResourceOwner
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    protected function doGetInformationRequest($url, array $parameters = array())
+    protected function doGetInformationRequest($url, array $parameters = [])
     {
         return $this->httpRequest($url, http_build_query($parameters, '', '&'));
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
 
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'attr_name' => 'access_token',
             'use_bearer_authorization' => true,
-        ));
+        ]);
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function httpRequest($url, $content = null, $headers = [], $method = null)
+    protected function httpRequest($url, $content = null, array $headers = [], $method = null)
     {
         if ($content) {
             $headers += array('Content-Type' => 'application/json');

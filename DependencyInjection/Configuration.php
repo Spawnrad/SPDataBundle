@@ -17,18 +17,18 @@ class Configuration implements ConfigurationInterface
      *
      * @var array
      */
-    private static $resourceOwners = array(
-        'oauth2' => array(
+    private static $resourceOwners = [
+        'oauth2' => [
             'facebook',
             'youtube',
             'instagram',
             'google',
-            'twitch'
-        ),
-        'oauth1' => array(
+            'twitch',
+        ],
+        'oauth1' => [
             'twitter',
-        ),
-    );
+        ],
+    ];
 
     /**
      * Return the type (OAuth1 or OAuth2) of given resource owner.
@@ -40,6 +40,7 @@ class Configuration implements ConfigurationInterface
     public static function getResourceOwnerType($resourceOwner)
     {
         $resourceOwner = current(explode('.', $resourceOwner));
+        $resourceOwner = current(explode('_', $resourceOwner));
 
         if ('oauth1' === $resourceOwner || 'oauth2' === $resourceOwner) {
             return $resourceOwner;
@@ -62,6 +63,7 @@ class Configuration implements ConfigurationInterface
     public static function isResourceOwnerSupported($resourceOwner)
     {
         $resourceOwner = current(explode('.', $resourceOwner));
+        $resourceOwner = current(explode('_', $resourceOwner));
 
         if ('oauth1' === $resourceOwner || 'oauth2' === $resourceOwner) {
             return true;
@@ -253,13 +255,13 @@ class Configuration implements ConfigurationInterface
     {
         $node
             ->children()
-                ->arrayNode('http')
-                    ->addDefaultsIfNotSet()
-                    ->children()
-                        ->scalarNode('client')->defaultValue('httplug.client.default')->end()
-                        ->scalarNode('message_factory')->defaultValue('httplug.message_factory.default')->end()
-                    ->end()
-                ->end()
+            ->arrayNode('http')
+            ->addDefaultsIfNotSet()
+            ->children()
+            ->scalarNode('client')->defaultValue('httplug.client.default')->end()
+            ->scalarNode('message_factory')->defaultValue('httplug.message_factory.default')->end()
+            ->end()
+            ->end()
             ->end()
         ;
     }

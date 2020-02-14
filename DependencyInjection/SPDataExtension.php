@@ -1,18 +1,17 @@
 <?php
 
-
 namespace SP\Bundle\DataBundle\DependencyInjection;
 
 use SP\Bundle\DataBundle\Data\ResourceOwnerInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
-use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Alias;
+use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\DefinitionDecorator;
-use Symfony\Component\DependencyInjection\ChildDefinition;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 class SPDataExtension extends Extension
 {
@@ -29,14 +28,19 @@ class SPDataExtension extends Extension
         $config = $processor->processConfiguration(new Configuration(), $configs);
 
         $this->createHttplugClient($container, $config);
-        
+
         // setup services for all configured resource owners
-        $resourceOwners = array();
+        $resourceOwners = [];
         foreach ($config['resource_owners'] as $name => $options) {
             $resourceOwners[$name] = $name;
             $this->createResourceOwnerService($container, $name, $options);
         }
         $container->setParameter('sp_data.resource_owners', $resourceOwners);
+
+        $oauthUtils = $container->getDefinition('sp_data.oauth_utils');
+        foreach ($config['resource_owners'] as $name => $options) {
+            $oauthUtils->addMethodCall('addResourceOwnerMap', [new Reference('sp_data.resource_ownermap.' . $name)]);
+        }
 
     }
 
@@ -49,8 +53,6 @@ class SPDataExtension extends Extension
      */
     public function createResourceOwnerService(ContainerBuilder $container, $name, array $options)
     {
-        $definitionClassname = $this->getDefinitionClassname();
-
         // alias services
         if (isset($options['service'])) {
             // set the appropriate name for aliased services, compiler pass depends on it
@@ -68,11 +70,11 @@ class SPDataExtension extends Extension
                 throw new InvalidConfigurationException(sprintf('Class "%s" must implement interface "SP\Bundle\DataBundle\Data\ResourceOwnerInterface".', $options['class']));
             }
 
-            $definition = new $definitionClassname('sp_data.abstract_resource_owner.' . $type);
+            $definition = new ChildDefinition('sp_data.abstract_resource_owner.' . $type);
             $definition->setClass($options['class']);
             unset($options['class']);
         } else {
-            $definition = new $definitionClassname('sp_data.abstract_resource_owner.' . Configuration::getResourceOwnerType($type));
+            $definition = new ChildDefinition('sp_data.abstract_resource_owner.' . Configuration::getResourceOwnerType($type));
             $definition->setClass("%sp_data.resource_owner.$type.class%");
         }
 

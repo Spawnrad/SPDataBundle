@@ -30,6 +30,17 @@ services:
         calls:
             - [setContainer, ['@service_container']]
 
+    sp_data.abstract_resource_ownermap:
+        public: true
+        abstract: true
+        class: SP\Bundle\DataBundle\Utils\ResourceOwnerMap
+        arguments:
+            - "@security.http_utils"
+            - "%sp_data.resource_owners%"
+            - {}
+        calls:
+            - [setContainer, ['@service_container']]
+            
     sp_data.abstract_resource_owner.generic:
         public: true
         abstract: true
