@@ -28,6 +28,14 @@ class DataUtils implements ContainerAwareInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
+    }
+
+    /**
      * Sign the request parameters.
      *
      * @param string $method          Request method
