@@ -24,6 +24,7 @@ parameters:
 services:
     sp_data.utils.api_utils:
         public: true
+        abstract: true
         class: SP\Bundle\DataBundle\Utils\DataUtils
         arguments:
            - "@security.http_utils"
