@@ -2,42 +2,30 @@
 
 namespace SP\Bundle\DataBundle\Utils;
 
-use SP\Bundle\DataBundle\ResourceOwner\ResourceOwnerInterface;
-use SP\Bundle\DataBundle\Utils\ResourceOwnerMapInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-class DataUtils
+class DataUtils implements ContainerAwareInterface
 {
     public const SIGNATURE_METHOD_HMAC = 'HMAC-SHA1';
     public const SIGNATURE_METHOD_RSA = 'RSA-SHA1';
     public const SIGNATURE_METHOD_PLAINTEXT = 'PLAINTEXT';
 
     /**
-     * @var ResourceOwnerMapInterface[]
+     * @var ContainerInterface
      */
-    protected $ownerMaps = [];
+    protected $container;
 
     /**
-     * @param ResourceOwnerMapInterface $ownerMap
+     * Constructor.
+     *
+     * @param HttpUtils $httpUtils              HttpUtils
      */
-    public function addResourceOwnerMap(ResourceOwnerMapInterface $ownerMap)
+    public function __construct(HttpUtils $httpUtils)
     {
-        $this->ownerMaps[] = $ownerMap;
+        $this->httpUtils = $httpUtils;
     }
-
-    /**
-     * @return array
-     */
-    public function getResourceOwners()
-    {
-        $resourceOwners = [];
-
-        foreach ($this->ownerMaps as $ownerMap) {
-            $resourceOwners = array_merge($resourceOwners, $ownerMap->getResourceOwners());
-        }
-
-        return array_keys($resourceOwners);
-    }    
 
     /**
      * Sign the request parameters.
@@ -84,7 +72,7 @@ class DataUtils
 
         // Remove query params from URL
         // Ref: Spec: 9.1.2
-        $url = sprintf('%s://%s%s%s', $url['scheme'], $url['host'], ($explicitPort ? ':'.$explicitPort : ''), $url['path'] ?? '');
+        $url = sprintf('%s://%s%s%s', $url['scheme'], $url['host'], ($explicitPort ? ':' . $explicitPort : ''), $url['path'] ?? '');
 
         // Parameters are sorted by name, using lexicographical byte value ordering.
         // Ref: Spec: 9.1.1 (1)
@@ -139,38 +127,24 @@ class DataUtils
         return base64_encode($signature);
     }
 
-    /**
-     * @param string $name
-     *
-     * @return ResourceOwnerInterface
-     *
-     * @throws \RuntimeException
-     */
-    protected function getResourceOwner($name)
+    public function getResourceOwner($name)
     {
-        foreach ($this->ownerMaps as $ownerMap) {
-            $resourceOwner = $ownerMap->getResourceOwnerByName($name);
-            if ($resourceOwner instanceof ResourceOwnerInterface) {
-                return $resourceOwner;
-            }
+        $resourceOwner = null;
+
+        $resourceOwner = $this->getResourceOwnerByName($name);
+        if ($resourceOwner instanceof ResourceOwnerInterface) {
+            return $resourceOwner;
         }
 
-        throw new \RuntimeException(sprintf("No resource owner with name '%s'.", $name));
+        if (!$resourceOwner instanceof ResourceOwnerInterface) {
+            throw new \RuntimeException(sprintf("No resource owner with name '%s'.", $name));
+        }
+
+        return $resourceOwner;
     }
 
-    /**
-     * @param string $name
-     *
-     * @return string|null
-     */
-    protected function getResourceOwnerCheckPath($name)
+    public function getResourceOwnerByName($name)
     {
-        foreach ($this->ownerMaps as $ownerMap) {
-            if ($potentialResourceOwnerCheckPath = $ownerMap->getResourceOwnerCheckPath($name)) {
-                return $potentialResourceOwnerCheckPath;
-            }
-        }
-
-        return null;
+        return $this->container->get('sp_data.resource_owner.' . $name);
     }
 }

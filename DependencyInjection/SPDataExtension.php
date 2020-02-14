@@ -37,12 +37,6 @@ class SPDataExtension extends Extension
             $this->createResourceOwnerService($container, $name, $options);
         }
         $container->setParameter('sp_data.resource_owners', $resourceOwners);
-
-        $oauthUtils = $container->getDefinition('sp_data.utils.api_utils');
-        foreach ($config['resource_owners'] as $name => $options) {
-            $oauthUtils->addMethodCall('addResourceOwnerMap', [new Reference('sp_data.resource_ownermap.' . $name)]);
-        }
-
     }
 
     /**
