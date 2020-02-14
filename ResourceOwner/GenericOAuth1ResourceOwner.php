@@ -73,9 +73,9 @@ class GenericOAuth1ResourceOwner extends AbstractResourceOwner
     /**
      * {@inheritdoc}
      */
-    protected function doGetUserInformationRequest($url, array $parameters = [])
+    protected function doGetInformationRequest($url, array $parameters = [])
     {
-        return $this->httpRequest($url, null, [], null, $parameters);
+        return $this->httpRequest($url, null, $parameters);
     }
     /**
      * {@inheritdoc}
