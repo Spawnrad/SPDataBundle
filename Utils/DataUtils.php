@@ -5,6 +5,7 @@ namespace SP\Bundle\DataBundle\Utils;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Http\HttpUtils;
 
 class DataUtils implements ContainerAwareInterface
 {
