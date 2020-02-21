@@ -2,6 +2,7 @@
 
 namespace SP\Bundle\DataBundle\Utils;
 
+use SP\Bundle\DataBundle\ResourceOwner\ResourceOwnerInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
