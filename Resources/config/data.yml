@@ -35,6 +35,7 @@ services:
         abstract: true
         arguments:
            - "@sp_data.http_client"
+           - "@security.http_utils"
            - {}
            -
 

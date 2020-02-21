@@ -6,7 +6,6 @@ use Http\Client\Common\HttpMethodsClient;
 use Http\Client\Exception;
 use Psr\Http\Message\ResponseInterface;
 use SP\Bundle\DataBundle\Exception\HttpTransportException;
-use SP\Bundle\DataBundle\OAuth\ResourceOwnerInterface;
 use SP\Bundle\DataBundle\Response\Analytic\PathResponse as PathAnalyticResponse;
 use SP\Bundle\DataBundle\Response\Data\DataResponseInterface;
 use SP\Bundle\DataBundle\Response\Data\PathResponse as PathDataResponse;
