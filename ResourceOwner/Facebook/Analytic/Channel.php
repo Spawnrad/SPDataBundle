@@ -13,6 +13,7 @@ class Channel extends GenericOAuth2ResourceOwner
     protected $paths = array(
         'items'         => 'data.0.values',
         'item_name'     => 'data.0.name',
+        'subscriberCount' => 'fan_count',
         'error'         => 'error.message'
     );
 
