@@ -55,7 +55,7 @@ class GenericOAuth1ResourceOwner extends AbstractResourceOwner
     /**
      * {@inheritdoc}
      */
-    protected function httpRequest($url, $content = null, array $parameters = [], array $headers = [], $method = null)
+    protected function httpRequest($url, $content = null, array $headers = [], $method = null, array $parameters = [])
     {
         foreach ($parameters as $key => $value) {
             $parameters[$key] = $key . '="' . rawurlencode($value) . '"';
@@ -75,7 +75,7 @@ class GenericOAuth1ResourceOwner extends AbstractResourceOwner
      */
     protected function doGetInformationRequest($url, array $parameters = [])
     {
-        return $this->httpRequest($url, null, $parameters);
+        return $this->httpRequest($url, null, [], null, $parameters);
     }
     /**
      * {@inheritdoc}
