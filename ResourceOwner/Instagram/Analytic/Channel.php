@@ -17,9 +17,9 @@ class Channel extends GenericOAuth2ResourceOwner
         'followers' => 'followers_count',
         'profilepicture' => 'profile_picture_url',
         'name' => 'username',
-        'items'         => 'data.0.values',
-        'item_name'     => 'data.0.name',
-        'error'         => 'error.message'
+        'items' => 'data.0.values',
+        'item_name' => 'data.0.name',
+        'error' => 'error.message',
     );
 
     /**
@@ -30,7 +30,7 @@ class Channel extends GenericOAuth2ResourceOwner
         parent::configureOptions($resolver);
 
         $resolver->setDefaults(array(
-            'infos_url'      => 'https://graph.facebook.com/v3.0/{instagram-id}',
+            'infos_url' => 'https://graph.facebook.com/v10.0/{instagram-id}',
             'response_class' => 'SP\Bundle\DataBundle\Response\Analytic\PathResponse',
         ));
     }

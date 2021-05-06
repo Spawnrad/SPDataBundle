@@ -11,10 +11,10 @@ class Channel extends GenericOAuth2ResourceOwner
      * {@inheritDoc}
      */
     protected $paths = array(
-        'items'         => 'data.0.values',
-        'item_name'     => 'data.0.name',
+        'items' => 'data.0.values',
+        'item_name' => 'data.0.name',
         'subscriberCount' => 'fan_count',
-        'error'         => 'error.message'
+        'error' => 'error.message',
     );
 
     /**
@@ -25,7 +25,7 @@ class Channel extends GenericOAuth2ResourceOwner
         parent::configureOptions($resolver);
 
         $resolver->setDefaults(array(
-            'infos_url'      => 'https://graph.facebook.com/v3.0/me/insights/',
+            'infos_url' => 'https://graph.facebook.com/v10.0/me/insights/',
             'response_class' => 'SP\Bundle\DataBundle\Response\Analytic\PathResponse',
         ));
     }

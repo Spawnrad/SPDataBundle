@@ -2,8 +2,8 @@
 
 namespace SP\Bundle\DataBundle\ResourceOwner\Facebook\Analytic;
 
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use SP\Bundle\DataBundle\ResourceOwner\GenericOAuth2ResourceOwner;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class Post extends GenericOAuth2ResourceOwner
 {
@@ -16,7 +16,7 @@ class Post extends GenericOAuth2ResourceOwner
         'commentCount' => 'comments.summary.total_count',
         'likeCount' => 'likes.summary.total_count',
         'shareCount' => 'shares.count',
-        'error' => 'error.message'
+        'error' => 'error.message',
     );
 
     /**
@@ -27,7 +27,7 @@ class Post extends GenericOAuth2ResourceOwner
         parent::configureOptions($resolver);
 
         $resolver->setDefaults(array(
-            'infos_url' => 'https://graph.facebook.com/v3.0/{post-id}?fields=likes.summary(true),comments.summary(true),shares,insights.metric(post_impressions_unique)',
+            'infos_url' => 'https://graph.facebook.com/v10.0/{post-id}?fields=likes.summary(true),comments.summary(true),shares,insights.metric(post_impressions_unique)',
             'response_class' => 'SP\Bundle\DataBundle\Response\Analytic\PathResponse',
         ));
     }
