@@ -14,7 +14,7 @@ class Posts extends GenericOAuth2ResourceOwner
         'identifier' => 'data.0.id',
         'title' => 'data.0.status_type',
         'description' => 'data.0.message',
-        'link' => null,
+        'link' => 'data.0.attachments.data.0.unshimmed_url',
         'thumbnail' => 'data.0.full_picture',
         'publishedAt' => 'data.0.created_time',
         'items' => 'data',
