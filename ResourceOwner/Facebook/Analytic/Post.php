@@ -27,7 +27,7 @@ class Post extends GenericOAuth2ResourceOwner
         parent::configureOptions($resolver);
 
         $resolver->setDefaults(array(
-            'infos_url' => 'https://graph.facebook.com/v10.0/{post-id}?fields=likes.summary(true),comments.summary(true),shares,insights.metric(post_impressions_unique)',
+            'infos_url' => 'https://graph.facebook.com/v15.0/{post-id}?fields=likes.summary(true),comments.summary(true),shares,insights.metric(post_impressions_unique)',
             'response_class' => 'SP\Bundle\DataBundle\Response\Analytic\PathResponse',
         ));
     }

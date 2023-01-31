@@ -29,7 +29,7 @@ class Posts extends GenericOAuth2ResourceOwner
         parent::configureOptions($resolver);
 
         $resolver->setDefaults(array(
-            'infos_url' => 'https://graph.facebook.com/v10.0/me/posts',
+            'infos_url' => 'https://graph.facebook.com/v15.0/me/posts',
             'response_class' => 'SP\Bundle\DataBundle\Response\Data\PathResponse',
         ));
     }
