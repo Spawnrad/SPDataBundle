@@ -61,6 +61,26 @@ class PathResponse extends AbstractResponse
         return $this->getValueForPath('publishedAt', $level);
     }
 
+    public function getViewCount($level = null)
+    {
+        return $this->getValueForPath('viewCount', $level);
+    }
+
+    public function getCommentCount($level = null)
+    {
+        return $this->getValueForPath('commentCount', $level);
+    }
+
+    public function getLikeCount($level = null)
+    {
+        return $this->getValueForPath('likeCount', $level);
+    }
+
+    public function getShareCount($level = null)
+    {
+        return $this->getValueForPath('shareCount', $level);
+    }
+
     public function getItems()
     {
         return $this->getValueForPath('items');

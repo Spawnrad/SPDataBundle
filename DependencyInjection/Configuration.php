@@ -24,6 +24,8 @@ class Configuration implements ConfigurationInterface
             'instagram',
             'google',
             'twitch',
+            'tiktok',
+            'pinterest'
         ],
         'oauth1' => [
             'twitter',

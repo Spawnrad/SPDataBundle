@@ -43,31 +43,11 @@ interface ResourceOwnerInterface
      */
     public function setName($name);
 
-    /**
-     * Retrieve an access token
-     *
-     * @return The access token
-     */
     public function getAccessToken();
 
-    /**
-     * Sets an access token
-     *
-     * @return The access token
-     */
     public function setAccessToken($access_token);
 
-    /**
-     * Retrieve an etag
-     *
-     * @return The Etag
-     */
     public function setEtag($etag);
 
-    /**
-     * Sets an etag
-     *
-     * @return The etag
-     */
     public function getEtag();
 }

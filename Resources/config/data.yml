@@ -20,7 +20,11 @@ parameters:
     sp_data.resource_owner.google.analytic.geographic.class: SP\Bundle\DataBundle\ResourceOwner\Google\Analytic\Geographic
     sp_data.resource_owner.google.analytic.demographic.class: SP\Bundle\DataBundle\ResourceOwner\Google\Analytic\Demographic
     sp_data.resource_owner.google.analytic.gender.class: SP\Bundle\DataBundle\ResourceOwner\Google\Analytic\Gender
-
+    sp_data.resource_owner.tiktok.post.class: SP\Bundle\DataBundle\ResourceOwner\Tiktok\Post
+    sp_data.resource_owner.tiktok.posts.class: SP\Bundle\DataBundle\ResourceOwner\Tiktok\Posts
+    sp_data.resource_owner.tiktok.post.analytic.class: SP\Bundle\DataBundle\ResourceOwner\Tiktok\Analytic\Post
+    sp_data.resource_owner.tiktok.analytic.class: SP\Bundle\DataBundle\ResourceOwner\Tiktok\Analytic\Channel
+    
 services:
     sp_data.utils.api_utils:
         public: true
