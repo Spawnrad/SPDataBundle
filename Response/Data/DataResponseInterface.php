@@ -49,6 +49,13 @@ interface DataResponseInterface extends ResponseInterface
     public function getThumbnail();
 
     /**
+     * Get the media to display.
+     *
+     * @return string
+     */
+    public function getMedia();
+
+    /**
      * Get the publishedAt to display.
      *
      * @return string

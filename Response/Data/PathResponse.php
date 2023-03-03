@@ -56,6 +56,11 @@ class PathResponse extends AbstractResponse
         return $this->getValueForPath('thumbnail', $level);
     }
 
+    public function getMedia($level = null)
+    {
+        return $this->getValueForPath('media', $level);
+    }
+
     public function getPublishedAt($level = null)
     {
         return $this->getValueForPath('publishedAt', $level);
