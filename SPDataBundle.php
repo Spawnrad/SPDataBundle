@@ -10,8 +10,8 @@ class SPDataBundle extends Bundle
     /**
      * {@inheritdoc}
      */
-    public function getContainerExtension()
+    public function getContainerExtension(): ?ExtensionInterface
     {
-        return new SPDataExtension();
+        return $this->extension ?: $this->extension = $this->createContainerExtension();
     }
 }
