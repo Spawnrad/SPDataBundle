@@ -39,7 +39,7 @@ interface DataResponseInterface extends ResponseInterface
      *
      * @return string
      */
-    public function getShortCode();    
+    public function getShortCode();
 
     /**
      * Get the thumbnail to display.

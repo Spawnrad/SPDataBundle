@@ -9,10 +9,7 @@ class GenericOAuth1ResourceOwner extends AbstractResourceOwner
 {
     protected $access_token_secret;
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getInformation(array $extraParameters = array(), $content = null)
+    public function getInformation(array $extraParameters = [], $content = null)
     {
         $parameters = [
             'oauth_consumer_key' => $this->options['client_id'],
@@ -52,34 +49,26 @@ class GenericOAuth1ResourceOwner extends AbstractResourceOwner
         return $response;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function httpRequest($url, $content = null, array $headers = [], $method = null, array $parameters = [])
     {
         foreach ($parameters as $key => $value) {
-            $parameters[$key] = $key . '="' . rawurlencode($value) . '"';
+            $parameters[$key] = $key.'="'.rawurlencode($value).'"';
         }
 
         if (!$this->options['realm']) {
-            array_unshift($parameters, 'realm="' . rawurlencode($this->options['realm']) . '"');
+            array_unshift($parameters, 'realm="'.rawurlencode($this->options['realm']).'"');
         }
 
-        $headers['Authorization'] = 'OAuth ' . implode(', ', $parameters);
+        $headers['Authorization'] = 'OAuth '.implode(', ', $parameters);
 
         return parent::httpRequest($url, $content, $headers, $method);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function doGetInformationRequest($url, array $parameters = [])
     {
         return $this->httpRequest($url, null, [], null, $parameters);
     }
-    /**
-     * {@inheritdoc}
-     */
+
     protected function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);

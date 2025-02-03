@@ -7,10 +7,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class Channel extends GenericOAuth2ResourceOwner
 {
-    /**
-     * {@inheritDoc}
-     */
-    protected $paths = array(
+    protected $paths = [
         'identifier' => 'id',
         'subscriberCount' => 'followers_count',
         'postCount' => 'media_count',
@@ -20,18 +17,15 @@ class Channel extends GenericOAuth2ResourceOwner
         'items' => 'data.0.values',
         'item_name' => 'data.0.name',
         'error' => 'error.message',
-    );
+    ];
 
-    /**
-     * {@inheritDoc}
-     */
     protected function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
 
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'infos_url' => 'https://graph.facebook.com/v15.0/{instagram-id}',
             'response_class' => 'SP\Bundle\DataBundle\Response\Analytic\PathResponse',
-        ));
+        ]);
     }
 }

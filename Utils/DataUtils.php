@@ -22,17 +22,14 @@ class DataUtils implements ContainerAwareInterface
     /**
      * Constructor.
      *
-     * @param HttpUtils $httpUtils              HttpUtils
+     * @param HttpUtils $httpUtils HttpUtils
      */
     public function __construct(HttpUtils $httpUtils)
     {
         $this->httpUtils = $httpUtils;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setContainer(ContainerInterface $container = null)
+    public function setContainer(?ContainerInterface $container = null)
     {
         $this->container = $container;
     }
@@ -82,7 +79,7 @@ class DataUtils implements ContainerAwareInterface
 
         // Remove query params from URL
         // Ref: Spec: 9.1.2
-        $url = sprintf('%s://%s%s%s', $url['scheme'], $url['host'], ($explicitPort ? ':' . $explicitPort : ''), $url['path'] ?? '');
+        $url = sprintf('%s://%s%s%s', $url['scheme'], $url['host'], $explicitPort ? ':'.$explicitPort : '', $url['path'] ?? '');
 
         // Parameters are sorted by name, using lexicographical byte value ordering.
         // Ref: Spec: 9.1.1 (1)
@@ -155,6 +152,6 @@ class DataUtils implements ContainerAwareInterface
 
     public function getResourceOwnerByName($name)
     {
-        return $this->container->get('sp_data.resource_owner.' . $name);
+        return $this->container->get('sp_data.resource_owner.'.$name);
     }
 }

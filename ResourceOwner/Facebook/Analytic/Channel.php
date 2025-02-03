@@ -7,26 +7,20 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class Channel extends GenericOAuth2ResourceOwner
 {
-    /**
-     * {@inheritDoc}
-     */
-    protected $paths = array(
+    protected $paths = [
         'items' => 'data.0.values',
         'item_name' => 'data.0.name',
         'subscriberCount' => 'followers_count',
         'error' => 'error.message',
-    );
+    ];
 
-    /**
-     * {@inheritDoc}
-     */
     protected function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
 
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'infos_url' => 'https://graph.facebook.com/v15.0/me/insights/',
             'response_class' => 'SP\Bundle\DataBundle\Response\Analytic\PathResponse',
-        ));
+        ]);
     }
 }

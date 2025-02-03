@@ -7,10 +7,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class Posts extends GenericOAuth2ResourceOwner
 {
-    /**
-     * {@inheritDoc}
-     */
-    protected $paths = array(
+    protected $paths = [
         'identifier' => 'data.0.id',
         'title' => 'data.0.status_type',
         'description' => 'data.0.message',
@@ -19,18 +16,15 @@ class Posts extends GenericOAuth2ResourceOwner
         'publishedAt' => 'data.0.created_time',
         'items' => 'data',
         'error' => 'error.message',
-    );
+    ];
 
-    /**
-     * {@inheritDoc}
-     */
     protected function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
 
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'infos_url' => 'https://graph.facebook.com/v15.0/me/posts',
             'response_class' => 'SP\Bundle\DataBundle\Response\Data\PathResponse',
-        ));
+        ]);
     }
 }

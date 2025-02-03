@@ -2,15 +2,12 @@
 
 namespace SP\Bundle\DataBundle\ResourceOwner\Tiktok;
 
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use SP\Bundle\DataBundle\ResourceOwner\GenericOAuth2ResourceOwner;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class Post extends GenericOAuth2ResourceOwner
 {
-    /**
-     * {@inheritDoc}
-     */
-    protected $paths = array(
+    protected $paths = [
         'identifier' => 'data.videos.0.id',
         'title' => 'data.videos.0.title',
         'description' => 'data.videos.0.video_description',
@@ -23,16 +20,13 @@ class Post extends GenericOAuth2ResourceOwner
         'commentCount' => 'data.videos.0.comment_count',
         'likeCount' => 'data.videos.0.like_count',
         'shareCount' => 'data.videos.0.share_count',
-     
+
         'items' => 'data.videos',
         'error' => 'error.message',
         'pagination' => 'data.cursor',
-        'has_more' => 'data.has_more'
-    );
+        'has_more' => 'data.has_more',
+    ];
 
-    /**
-     * {@inheritdoc}
-     */
     public function getInformation(array $extraParameters = [], $posts = [])
     {
         $headers = $this->getHeaderInformation();
@@ -40,8 +34,8 @@ class Post extends GenericOAuth2ResourceOwner
         if (!empty($posts)) {
             $content = json_encode([
                 'filters' => [
-                    'video_ids' => $posts
-                ]
+                    'video_ids' => $posts,
+                ],
             ]);
         }
 
@@ -56,16 +50,13 @@ class Post extends GenericOAuth2ResourceOwner
         return $response;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     protected function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
 
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'infos_url' => 'https://open.tiktokapis.com/v2/video/query/',
             'response_class' => 'SP\Bundle\DataBundle\Response\Data\PathResponse',
-        ));
+        ]);
     }
 }

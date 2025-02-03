@@ -7,7 +7,7 @@ class PathResponse extends AbstractResponse
     /**
      * @var array
      */
-    protected $paths = array(
+    protected $paths = [
         'identifier' => null,
         'followers' => null,
         'profilepicture' => null,
@@ -21,7 +21,7 @@ class PathResponse extends AbstractResponse
         'items' => null,
         'item_name' => null,
         'error' => null,
-    );
+    ];
 
     public function getUsername($level = null)
     {
@@ -36,7 +36,7 @@ class PathResponse extends AbstractResponse
     public function getFollowers()
     {
         return $this->getValueForPath('followers');
-    }    
+    }
 
     public function getName()
     {
@@ -105,8 +105,6 @@ class PathResponse extends AbstractResponse
 
     /**
      * Configure the paths.
-     *
-     * @param array $paths
      */
     public function setPaths(array $paths)
     {
@@ -115,8 +113,6 @@ class PathResponse extends AbstractResponse
 
     /**
      * @param string $name
-     *
-     * @return mixed
      */
     public function getPath($name)
     {
@@ -128,7 +124,7 @@ class PathResponse extends AbstractResponse
      *
      * @param string $path Name of the path to get the value for
      *
-     * @return null|string
+     * @return string|null
      */
     protected function getValueForPath($path, $level = null)
     {
@@ -151,25 +147,23 @@ class PathResponse extends AbstractResponse
                 return $this->getValue(current($steps), $response);
             }
 
-            $value = array();
+            $value = [];
             foreach ($steps as $step) {
                 $value[] = $this->getValue($step, $response);
             }
 
             $value = trim(implode(' ', $value));
 
-            return $value ? : null;
+            return $value ?: null;
         }
 
         return $this->getValue($steps, $response);
     }
 
-
     /**
      * @param string $steps
-     * @param array $response
      *
-     * @return null|string
+     * @return string|null
      */
     private function getValue($steps, array $response)
     {

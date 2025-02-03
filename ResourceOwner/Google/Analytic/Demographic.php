@@ -7,18 +7,12 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class Demographic extends GenericOAuth2ResourceOwner
 {
-    /**
-     * {@inheritDoc}
-     */
-    protected $paths = array(
+    protected $paths = [
         'items' => 'reports.0.data',
         'error' => 'error.message',
-    );
+    ];
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getInformation(array $extraParameters = array(), $content = null)
+    public function getInformation(array $extraParameters = [], $content = null)
     {
         $content = json_encode([
             'reportRequests' => [
@@ -49,16 +43,13 @@ class Demographic extends GenericOAuth2ResourceOwner
         return parent::getInformation($extraParameters, $content);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     protected function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
 
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'infos_url' => 'https://analyticsreporting.googleapis.com/v4/reports:batchGet',
             'response_class' => 'SP\Bundle\DataBundle\Response\Data\PathResponse',
-        ));
+        ]);
     }
 }

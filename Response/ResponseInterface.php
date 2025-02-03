@@ -1,10 +1,8 @@
 <?php
 
-
 namespace SP\Bundle\DataBundle\Response;
 
 use SP\Bundle\DataBundle\ResourceOwner\ResourceOwnerInterface;
-
 
 interface ResponseInterface
 {

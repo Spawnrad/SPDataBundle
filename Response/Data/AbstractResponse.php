@@ -27,17 +27,11 @@ abstract class AbstractResponse implements DataResponseInterface
      */
     protected $resourceOwner;
 
-    /**
-     * {@inheritdoc}
-     */
     public function getResponse()
     {
         return $this->response;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setResponse($response)
     {
         if (is_array($response)) {
@@ -45,7 +39,7 @@ abstract class AbstractResponse implements DataResponseInterface
         } else {
             // First check that response exists, due too bug: https://bugs.php.net/bug.php?id=54484
             if (!$response) {
-                $this->response = array();
+                $this->response = [];
             } else {
                 $this->response = json_decode($response, true);
 
@@ -56,33 +50,21 @@ abstract class AbstractResponse implements DataResponseInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getStatusCode()
     {
         return $this->statusCode;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setStatusCode($status_code)
     {
         $this->statusCode = $status_code;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getResourceOwner()
     {
         return $this->resourceOwner;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setResourceOwner(ResourceOwnerInterface $resourceOwner)
     {
         $this->resourceOwner = $resourceOwner;
@@ -96,9 +78,6 @@ abstract class AbstractResponse implements DataResponseInterface
         return $this->Etag;
     }
 
-    /**
-     * @param array $etag
-     */
     public function setEtag($Etag)
     {
         $this->Etag = $Etag;

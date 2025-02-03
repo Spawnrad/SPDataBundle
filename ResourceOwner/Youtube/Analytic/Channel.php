@@ -7,18 +7,12 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class Channel extends GenericOAuth2ResourceOwner
 {
-    /**
-     * {@inheritDoc}
-     */
-    protected $paths = array(
+    protected $paths = [
         'items' => 'rows',
         'error' => 'error.message',
-    );
+    ];
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getInformation(array $extraParameters = array(), $content = null)
+    public function getInformation(array $extraParameters = [], $content = null)
     {
         if (!$extraParameters) {
             $now = new \DateTime();
@@ -27,8 +21,8 @@ class Channel extends GenericOAuth2ResourceOwner
             $end_date = $now->format('Y-m-d');
 
             $youtube_parameters = ['ids' => 'channel==MINE',
-                                   'startDate' => $start_date,
-                                   'endDate' => $end_date];
+                'startDate' => $start_date,
+                'endDate' => $end_date];
 
             $extraParameters = array_merge($youtube_parameters, $extraParameters);
         }
@@ -36,16 +30,13 @@ class Channel extends GenericOAuth2ResourceOwner
         return parent::getInformation($extraParameters);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     protected function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
 
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'infos_url' => 'https://youtubeanalytics.googleapis.com/v2/reports?metrics=viewerPercentage&dimensions=ageGroup',
             'response_class' => 'SP\Bundle\DataBundle\Response\Data\PathResponse',
-        ));
+        ]);
     }
 }

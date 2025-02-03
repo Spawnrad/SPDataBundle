@@ -17,7 +17,6 @@ abstract class AbstractResponse implements AnalyticResponseInterface
      */
     protected $resourceOwner;
 
-
     /**
      * @var array
      */
@@ -28,17 +27,11 @@ abstract class AbstractResponse implements AnalyticResponseInterface
      */
     protected $Etag;
 
-    /**
-     * {@inheritdoc}
-     */
     public function getResponse()
     {
         return $this->response;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setResponse($response)
     {
         if (is_array($response)) {
@@ -46,7 +39,7 @@ abstract class AbstractResponse implements AnalyticResponseInterface
         } else {
             // First check that response exists, due too bug: https://bugs.php.net/bug.php?id=54484
             if (!$response) {
-                $this->response = array();
+                $this->response = [];
             } else {
                 $this->response = json_decode($response, true);
 
@@ -57,33 +50,21 @@ abstract class AbstractResponse implements AnalyticResponseInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getResourceOwner()
     {
         return $this->resourceOwner;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setResourceOwner(ResourceOwnerInterface $resourceOwner)
     {
         $this->resourceOwner = $resourceOwner;
     }
 
-    /**
-     * @return mixed
-     */
     public function getStatusCode()
     {
         return $this->statusCode;
     }
 
-    /**
-     * @param mixed $statusCode
-     */
     public function setStatusCode($statusCode)
     {
         $this->statusCode = $statusCode;

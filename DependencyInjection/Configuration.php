@@ -7,7 +7,7 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 /**
- * Configuration for the extension
+ * Configuration for the extension.
  */
 class Configuration implements ConfigurationInterface
 {
@@ -25,7 +25,7 @@ class Configuration implements ConfigurationInterface
             'google',
             'twitch',
             'tiktok',
-            'pinterest'
+            'pinterest',
         ],
         'oauth1' => [
             'twitter',
@@ -60,7 +60,7 @@ class Configuration implements ConfigurationInterface
      *
      * @param string $resourceOwner
      *
-     * @return Boolean
+     * @return bool
      */
     public static function isResourceOwnerSupported($resourceOwner)
     {
@@ -186,7 +186,7 @@ class Configuration implements ConfigurationInterface
                 }
 
                 // for each type at least these have to be set
-                foreach (array('type') as $child) {
+                foreach (['type'] as $child) {
                     if (!isset($c[$child])) {
                         return true;
                     }
@@ -227,7 +227,7 @@ class Configuration implements ConfigurationInterface
                     return !isset($c['response_class']);
                 }
 
-                foreach (array('identifier') as $child) {
+                foreach (['identifier'] as $child) {
                     if (!isset($c['paths'][$child])) {
                         return true;
                     }

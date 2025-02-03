@@ -2,15 +2,12 @@
 
 namespace SP\Bundle\DataBundle\ResourceOwner\Instagram;
 
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use SP\Bundle\DataBundle\ResourceOwner\GenericOAuth2ResourceOwner;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class Posts extends GenericOAuth2ResourceOwner
 {
-    /**
-     * {@inheritDoc}
-     */
-    protected $paths = array(
+    protected $paths = [
         'identifier' => 'data.0.id',
         'title' => 'data.0.media_type',
         'description' => 'data.0.caption',
@@ -19,22 +16,19 @@ class Posts extends GenericOAuth2ResourceOwner
         'thumbnail' => 'data.0.thumbnail_url',
         'media' => 'data.0.media_url',
         'publishedAt' => 'data.0.timestamp',
-        'userId' => 'data.0.owner.id',        
+        'userId' => 'data.0.owner.id',
         'items' => 'data',
         'error' => 'error.message',
-        'pagination' => 'paging.cursors.after'
-    );
+        'pagination' => 'paging.cursors.after',
+    ];
 
-    /**
-     * {@inheritDoc}
-     */
     protected function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
 
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'infos_url' => 'https://graph.facebook.com/{instagram-id}/media',
             'response_class' => 'SP\Bundle\DataBundle\Response\Data\PathResponse',
-        ));
+        ]);
     }
 }

@@ -6,9 +6,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class GenericOAuth2ResourceOwner extends AbstractResourceOwner
 {
-    /**
-     * {@inheritdoc}
-     */
     public function getInformation(array $extraParameters = [], $content = null)
     {
         $headers = $this->getHeaderInformation();
@@ -34,35 +31,30 @@ class GenericOAuth2ResourceOwner extends AbstractResourceOwner
             $response->setEtag($result->getHeader('Etag')[0]);
         }
         $response->setResourceOwner($this);
+
         return $response;
     }
 
     protected function getHeaderInformation()
     {
-        $headers = array();
+        $headers = [];
 
         if ($this->access_token) {
             if ($this->options['use_bearer_authorization']) {
-                $headers = array('Authorization' => 'Bearer ' . $this->access_token);
+                $headers = ['Authorization' => 'Bearer '.$this->access_token];
             } else {
-                $headers = array($this->options['attr_name'] => $this->access_token);
+                $headers = [$this->options['attr_name'] => $this->access_token];
             }
         }
 
         return $headers;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function doGetInformationRequest($url, array $parameters = [])
     {
         return $this->httpRequest($url, http_build_query($parameters, '', '&'));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
@@ -73,15 +65,12 @@ class GenericOAuth2ResourceOwner extends AbstractResourceOwner
         ]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function httpRequest($url, $content = null, array $headers = [], $method = null)
     {
         if ($content) {
-            $headers += array('Content-Type' => 'application/json');
+            $headers += ['Content-Type' => 'application/json'];
         } else {
-            $headers += array('Content-Type' => 'application/x-www-form-urlencoded');
+            $headers += ['Content-Type' => 'application/x-www-form-urlencoded'];
         }
 
         return parent::httpRequest($url, $content, $headers, $method);

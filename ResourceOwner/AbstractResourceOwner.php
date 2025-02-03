@@ -58,16 +58,17 @@ abstract class AbstractResourceOwner implements ResourceOwnerInterface
     protected $etag;
 
     /**
-     * @param HttpMethodsClient           $httpClient Httplug client
-     * @param HttpUtils                   $httpUtils  Http utils
-     * @param array                       $options    Options for the resource owner
-     * @param string                      $name       Name for the resource owner
+     * @param HttpMethodsClient $httpClient Httplug client
+     * @param HttpUtils         $httpUtils  Http utils
+     * @param array             $options    Options for the resource owner
+     * @param string            $name       Name for the resource owner
      */
     public function __construct(
         HttpMethodsClient $httpClient,
         HttpUtils $httpUtils,
         array $options,
-        $name) {
+        $name)
+    {
         $this->httpClient = $httpClient;
         $this->httpUtils = $httpUtils;
         $this->name = $name;
@@ -98,25 +99,16 @@ abstract class AbstractResourceOwner implements ResourceOwnerInterface
     {
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
         return $this->name;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setName($name)
     {
         $this->name = $name;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getOption($name)
     {
         if (!\array_key_exists($name, $this->options)) {
@@ -126,9 +118,6 @@ abstract class AbstractResourceOwner implements ResourceOwnerInterface
         return $this->options[$name];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function addPaths(array $paths)
     {
         $this->paths = array_merge($this->paths, $paths);
@@ -141,7 +130,7 @@ abstract class AbstractResourceOwner implements ResourceOwnerInterface
      */
     protected function getDataResponse()
     {
-        $response = new $this->options['response_class'];
+        $response = new $this->options['response_class']();
         if ($response instanceof PathDataResponse || $response instanceof PathAnalyticResponse) {
             $response->setPaths($this->paths);
         }
@@ -151,7 +140,6 @@ abstract class AbstractResourceOwner implements ResourceOwnerInterface
 
     /**
      * @param string $url
-     * @param array  $parameters
      *
      * @return string
      */
@@ -159,7 +147,7 @@ abstract class AbstractResourceOwner implements ResourceOwnerInterface
     {
         $normalizedUrl = $url;
         if (!empty($parameters)) {
-            $normalizedUrl .= (false !== strpos($url, '?') ? '&' : '?') . http_build_query($parameters, '', '&');
+            $normalizedUrl .= (false !== strpos($url, '?') ? '&' : '?').http_build_query($parameters, '', '&');
         }
 
         return $normalizedUrl;
@@ -173,9 +161,9 @@ abstract class AbstractResourceOwner implements ResourceOwnerInterface
      * @param array        $headers The headers of the request
      * @param string       $method  The HTTP method to use
      *
-     * @throws HttpTransportException
-     *
      * @return ResponseInterface The response content
+     *
+     * @throws HttpTransportException
      */
     protected function httpRequest($url, $content = null, array $headers = [], $method = null)
     {
@@ -193,7 +181,7 @@ abstract class AbstractResourceOwner implements ResourceOwnerInterface
         }
 
         if ($this->etag) {
-            $headers += array('If-None-Match' => $this->etag);
+            $headers += ['If-None-Match' => $this->etag];
         }
 
         try {
@@ -210,8 +198,6 @@ abstract class AbstractResourceOwner implements ResourceOwnerInterface
 
     /**
      * Get the 'parsed' content based on the response headers.
-     *
-     * @param ResponseInterface $rawResponse
      *
      * @return array
      */
@@ -238,7 +224,7 @@ abstract class AbstractResourceOwner implements ResourceOwnerInterface
      */
     protected function generateNonce()
     {
-        return md5(microtime(true) . uniqid('', true));
+        return md5(microtime(true).uniqid('', true));
     }
 
     public function getAccessToken()
@@ -269,7 +255,6 @@ abstract class AbstractResourceOwner implements ResourceOwnerInterface
 
     /**
      * @param string $url
-     * @param array  $parameters
      *
      * @return ResponseInterface
      */
@@ -277,11 +262,8 @@ abstract class AbstractResourceOwner implements ResourceOwnerInterface
 
     /**
      * Configure the option resolver.
-     *
-     * @param OptionsResolver $resolver
      */
     protected function configureOptions(OptionsResolver $resolver)
     {
-
     }
 }

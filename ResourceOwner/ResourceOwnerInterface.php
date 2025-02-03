@@ -14,9 +14,10 @@ interface ResourceOwnerInterface
 {
     /**
      * Retrieves the user's information from an access_token.
+     *
      * @return ResponseInterface the wrapped response interface
      */
-    public function getInformation(array $extraParameters = [], array $content = null);
+    public function getInformation(array $extraParameters = [], ?array $content = null);
 
     /**
      * Return a name for the resource owner.
