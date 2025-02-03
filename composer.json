@@ -21,7 +21,7 @@
         "symfony/form": "^5.4 || ^6.4 || ^7.1",
         "symfony/yaml": "^5.4 || ^6.4 || ^7.1",
         "symfony/templating": "^5.4 || ^6.4 || ^7.1",
-        "php-http/httplug-bundle": "^2.1"
+        "php-http/httplug-bundle": "^1.7 || ^2.1"
     },
     "require-dev": {
         "doctrine/doctrine-bundle": "^2.4",
