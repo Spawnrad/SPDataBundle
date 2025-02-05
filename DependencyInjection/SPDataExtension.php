@@ -15,9 +15,9 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 class SPDataExtension extends Extension
 {
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
-        $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config/'));
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config/'));
         $loader->load('data.yml');
         $loader->load('http_client.yml');
 
@@ -47,7 +47,7 @@ class SPDataExtension extends Extension
         // alias services
         if (isset($options['service'])) {
             // set the appropriate name for aliased services, compiler pass depends on it
-            $container->setAlias('sp_data.resource_owner.'.$name, new Alias($options['service'], true));
+            $container->setAlias('sp_data.resource_owner.' . $name, new Alias($options['service'], true));
 
             return;
         }
@@ -61,11 +61,11 @@ class SPDataExtension extends Extension
                 throw new InvalidConfigurationException(sprintf('Class "%s" must implement interface "SP\Bundle\DataBundle\Data\ResourceOwnerInterface".', $options['class']));
             }
 
-            $definition = new ChildDefinition('sp_data.abstract_resource_owner.'.$type);
+            $definition = new ChildDefinition('sp_data.abstract_resource_owner.' . $type);
             $definition->setClass($options['class']);
             unset($options['class']);
         } else {
-            $definition = new ChildDefinition('sp_data.abstract_resource_owner.'.Configuration::getResourceOwnerType($type));
+            $definition = new ChildDefinition('sp_data.abstract_resource_owner.' . Configuration::getResourceOwnerType($type));
             $definition->setClass("%sp_data.resource_owner.$type.class%");
         }
 
@@ -73,7 +73,7 @@ class SPDataExtension extends Extension
         $definition->replaceArgument(3, $name);
         $definition->setPublic(true);
 
-        $container->setDefinition('sp_data.resource_owner.'.$name, $definition);
+        $container->setDefinition('sp_data.resource_owner.' . $name, $definition);
     }
 
     public function getAlias(): string
