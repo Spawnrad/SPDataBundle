@@ -4,4 +4,4 @@ services:
         class: Http\Client\Common\HttpMethodsClient
         arguments:
            - "@sp_data.http.client"
-           - "@sp_data.http.message_factory"
+           - "@sp_data.http.factory"

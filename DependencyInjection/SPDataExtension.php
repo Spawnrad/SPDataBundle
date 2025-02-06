@@ -84,18 +84,18 @@ class SPDataExtension extends Extension
     protected function createHttplugClient(ContainerBuilder $container, array $config)
     {
         $httpClientId = $config['http']['client'];
-        $httpMessageFactoryId = $config['http']['message_factory'];
+        $httpMessageFactoryId = $config['http']['factory'];
         $bundles = $container->getParameter('kernel.bundles');
 
         if ('httplug.client.default' === $httpClientId && !isset($bundles['HttplugBundle'])) {
             throw new InvalidConfigurationException('You must setup php-http/httplug-bundle to use the default http client service.');
         }
-        if ('httplug.message_factory.default' === $httpMessageFactoryId && !isset($bundles['HttplugBundle'])) {
+        if ('httplug.factory.guzzle7' === $httpMessageFactoryId && !isset($bundles['HttplugBundle'])) {
             throw new InvalidConfigurationException('You must setup php-http/httplug-bundle to use the default http message factory service.');
         }
 
         $container->setAlias('sp_data.http.client', new Alias($config['http']['client'], true));
-        $container->setAlias('sp_data.http.message_factory', new Alias($config['http']['message_factory'], true));
+        $container->setAlias('sp_data.http.factory', new Alias($config['http']['factory'], true));
     }
 
     /**

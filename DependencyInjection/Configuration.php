@@ -261,7 +261,7 @@ class Configuration implements ConfigurationInterface
             ->addDefaultsIfNotSet()
             ->children()
             ->scalarNode('client')->defaultValue('httplug.client.default')->end()
-            ->scalarNode('message_factory')->defaultValue('httplug.message_factory.default')->end()
+            ->scalarNode('factory')->defaultValue('httplug.factory.guzzle7')->end()
             ->end()
             ->end()
             ->end()
