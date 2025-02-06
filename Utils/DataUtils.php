@@ -3,37 +3,28 @@
 namespace SP\Bundle\DataBundle\Utils;
 
 use SP\Bundle\DataBundle\ResourceOwner\ResourceOwnerInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\Security\Http\HttpUtils;
 
-class DataUtils implements ContainerAwareInterface
+class DataUtils
 {
     public const SIGNATURE_METHOD_HMAC = 'HMAC-SHA1';
     public const SIGNATURE_METHOD_RSA = 'RSA-SHA1';
     public const SIGNATURE_METHOD_PLAINTEXT = 'PLAINTEXT';
 
-    /**
-     * @var ContainerInterface
-     */
-    protected $container;
-
     protected HttpUtils $httpUtils;
+
+    protected ServiceLocator $resourceOwnerLocator;
 
     /**
      * Constructor.
      *
      * @param HttpUtils $httpUtils HttpUtils
      */
-    public function __construct(HttpUtils $httpUtils)
+    public function __construct(HttpUtils $httpUtils, ServiceLocator $resourceOwnerLocator)
     {
         $this->httpUtils = $httpUtils;
-    }
-
-    public function setContainer(?ContainerInterface $container = null)
-    {
-        $this->container = $container;
+        $this->resourceOwnerLocator = $resourceOwnerLocator;
     }
 
     /**
@@ -122,7 +113,6 @@ class DataUtils implements ContainerAwareInterface
                 $signature = false;
 
                 openssl_sign($baseString, $signature, $privateKey);
-                openssl_free_key($privateKey);
                 break;
 
             case self::SIGNATURE_METHOD_PLAINTEXT:
@@ -154,6 +144,10 @@ class DataUtils implements ContainerAwareInterface
 
     public function getResourceOwnerByName($name)
     {
-        return $this->container->get('sp_data.resource_owner.' . $name);
+        if (!$this->resourceOwnerLocator->has($name)) {
+            throw new \RuntimeException(sprintf("Aucun resource owner avec le nom '%s'.", $name));
+        }
+
+        return $this->resourceOwnerLocator->get($name);
     }
 }
