@@ -14,33 +14,16 @@ class DataUtils
 
     protected HttpUtils $httpUtils;
 
-    protected ServiceLocator $resourceOwnerLocator;
+    private ServiceLocator $resourceOwnerLocator;
 
-    /**
-     * Constructor.
-     *
-     * @param HttpUtils $httpUtils HttpUtils
-     */
-    public function __construct(HttpUtils $httpUtils, ServiceLocator $resourceOwnerLocator)
-    {
+    public function __construct(
+        HttpUtils $httpUtils,
+        ServiceLocator $resourceOwnerLocator,
+    ) {
         $this->httpUtils = $httpUtils;
         $this->resourceOwnerLocator = $resourceOwnerLocator;
     }
 
-    /**
-     * Sign the request parameters.
-     *
-     * @param string $method          Request method
-     * @param string $url             Request url
-     * @param array  $parameters      Parameters for the request
-     * @param string $clientSecret    Client secret to use as key part of signing
-     * @param string $tokenSecret     Optional token secret to use with signing
-     * @param string $signatureMethod Optional signature method used to sign token
-     *
-     * @return string
-     *
-     * @throws \RuntimeException
-     */
     public static function signRequest($method, $url, $parameters, $clientSecret, $tokenSecret = '', $signatureMethod = self::SIGNATURE_METHOD_HMAC)
     {
         // Validate required parameters
@@ -113,6 +96,7 @@ class DataUtils
                 $signature = false;
 
                 openssl_sign($baseString, $signature, $privateKey);
+                openssl_free_key($privateKey);
                 break;
 
             case self::SIGNATURE_METHOD_PLAINTEXT:
@@ -128,26 +112,15 @@ class DataUtils
 
     public function getResourceOwner($name)
     {
-        $resourceOwner = null;
-
-        $resourceOwner = $this->getResourceOwnerByName($name);
-        if ($resourceOwner instanceof ResourceOwnerInterface) {
-            return $resourceOwner;
-        }
-
-        if (!$resourceOwner instanceof ResourceOwnerInterface) {
+        if (!$this->resourceOwnerLocator->has($name)) {
             throw new \RuntimeException(sprintf("No resource owner with name '%s'.", $name));
         }
 
-        return $resourceOwner;
-    }
-
-    public function getResourceOwnerByName($name)
-    {
-        if (!$this->resourceOwnerLocator->has($name)) {
-            throw new \RuntimeException(sprintf("Aucun resource owner avec le nom '%s'.", $name));
+        $resourceOwner = $this->resourceOwnerLocator->get($name);
+        if (!$resourceOwner instanceof ResourceOwnerInterface) {
+            throw new \RuntimeException(sprintf("Resource owner '%s' is not an instance of ResourceOwnerInterface.", $name));
         }
 
-        return $this->resourceOwnerLocator->get($name);
+        return $resourceOwner;
     }
 }

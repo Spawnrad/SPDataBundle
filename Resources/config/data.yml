@@ -27,42 +27,11 @@ parameters:
     sp_data.resource_owner.tiktok.analytic.class: SP\Bundle\DataBundle\ResourceOwner\Tiktok\Analytic\Channel
 
 services:
-    # Définition du ServiceLocator pour les Resource Owners
     sp_data.resource_owner_locator:
         class: Symfony\Component\DependencyInjection\ServiceLocator
-        arguments:
-            - youtube:
-                  video: "@sp_data.resource_owner.youtube.video"
-                  playlistitems: "@sp_data.resource_owner.youtube.playlistitems"
-                  channel: "@sp_data.resource_owner.youtube.channel"
-                  analytic: "@sp_data.resource_owner.youtube.analytic"
-                  post.analytic: "@sp_data.resource_owner.youtube.post.analytic"
-              facebook:
-                  posts: "@sp_data.resource_owner.facebook.posts"
-                  post: "@sp_data.resource_owner.facebook.post"
-                  post.analytic: "@sp_data.resource_owner.facebook.post.analytic"
-                  analytic: "@sp_data.resource_owner.facebook.analytic"
-              twitter:
-                  posts: "@sp_data.resource_owner.twitter.posts"
-                  post: "@sp_data.resource_owner.twitter.post"
-                  analytic: "@sp_data.resource_owner.twitter.analytic"
-                  post.analytic: "@sp_data.resource_owner.twitter.post.analytic"
-              instagram:
-                  posts: "@sp_data.resource_owner.instagram.posts"
-                  post: "@sp_data.resource_owner.instagram.post"
-                  post.analytic: "@sp_data.resource_owner.instagram.post.analytic"
-                  analytic: "@sp_data.resource_owner.instagram.analytic"
-              google:
-                  analytic: "@sp_data.resource_owner.google.analytic"
-                  analytic.geographic: "@sp_data.resource_owner.google.analytic.geographic"
-                  analytic.demographic: "@sp_data.resource_owner.google.analytic.demographic"
-                  analytic.gender: "@sp_data.resource_owner.google.analytic.gender"
-              tiktok:
-                  post: "@sp_data.resource_owner.tiktok.post"
-                  posts: "@sp_data.resource_owner.tiktok.posts"
-                  post.analytic: "@sp_data.resource_owner.tiktok.post.analytic"
-                  analytic: "@sp_data.resource_owner.tiktok.analytic"
+        arguments: [[]]
         tags: ["container.service_locator"]
+        public: false
 
     sp_data.utils.api_utils:
         public: true
@@ -70,7 +39,6 @@ services:
         arguments:
             - "@security.http_utils"
             - "@sp_data.resource_owner_locator"
-        # Suppression de 'calls' car 'setContainer' n'est plus utilisé
 
     sp_data.abstract_resource_owner.generic:
         public: true
@@ -90,129 +58,3 @@ services:
         abstract: true
         parent: "sp_data.abstract_resource_owner.generic"
         class: SP\Bundle\DataBundle\ResourceOwner\GenericOAuth2ResourceOwner
-
-    # Définition des services pour les Resource Owners
-    sp_data.resource_owner.youtube.video:
-        class: "%sp_data.resource_owner.youtube.video.class%"
-        parent: "sp_data.abstract_resource_owner.oauth2"
-        public: true
-
-    sp_data.resource_owner.youtube.playlistitems:
-        class: "%sp_data.resource_owner.youtube.playlistitems.class%"
-        parent: "sp_data.abstract_resource_owner.oauth2"
-        public: true
-
-    sp_data.resource_owner.youtube.channel:
-        class: "%sp_data.resource_owner.youtube.channel.class%"
-        parent: "sp_data.abstract_resource_owner.oauth2"
-        public: true
-
-    sp_data.resource_owner.youtube.analytic:
-        class: "%sp_data.resource_owner.youtube.analytic.class%"
-        parent: "sp_data.abstract_resource_owner.oauth2"
-        public: true
-
-    sp_data.resource_owner.youtube.post.analytic:
-        class: "%sp_data.resource_owner.youtube.post.analytic.class%"
-        parent: "sp_data.abstract_resource_owner.oauth2"
-        public: true
-
-    sp_data.resource_owner.facebook.posts:
-        class: "%sp_data.resource_owner.facebook.posts.class%"
-        parent: "sp_data.abstract_resource_owner.oauth2"
-        public: true
-
-    sp_data.resource_owner.facebook.post:
-        class: "%sp_data.resource_owner.facebook.post.class%"
-        parent: "sp_data.abstract_resource_owner.oauth2"
-        public: true
-
-    sp_data.resource_owner.facebook.post.analytic:
-        class: "%sp_data.resource_owner.facebook.post.analytic.class%"
-        parent: "sp_data.abstract_resource_owner.oauth2"
-        public: true
-
-    sp_data.resource_owner.facebook.analytic:
-        class: "%sp_data.resource_owner.facebook.analytic.class%"
-        parent: "sp_data.abstract_resource_owner.oauth2"
-        public: true
-
-    sp_data.resource_owner.twitter.analytic:
-        class: "%sp_data.resource_owner.twitter.analytic.class%"
-        parent: "sp_data.abstract_resource_owner.oauth1"
-        public: true
-
-    sp_data.resource_owner.twitter.posts:
-        class: "%sp_data.resource_owner.twitter.posts.class%"
-        parent: "sp_data.abstract_resource_owner.oauth1"
-        public: true
-
-    sp_data.resource_owner.twitter.post:
-        class: "%sp_data.resource_owner.twitter.post.class%"
-        parent: "sp_data.abstract_resource_owner.oauth1"
-        public: true
-
-    sp_data.resource_owner.twitter.post.analytic:
-        class: "%sp_data.resource_owner.twitter.post.analytic.class%"
-        parent: "sp_data.abstract_resource_owner.oauth1"
-        public: true
-
-    sp_data.resource_owner.instagram.posts:
-        class: "%sp_data.resource_owner.instagram.posts.class%"
-        parent: "sp_data.abstract_resource_owner.oauth2"
-        public: true
-
-    sp_data.resource_owner.instagram.post:
-        class: "%sp_data.resource_owner.instagram.post.class%"
-        parent: "sp_data.abstract_resource_owner.oauth2"
-        public: true
-
-    sp_data.resource_owner.instagram.post.analytic:
-        class: "%sp_data.resource_owner.instagram.post.analytic.class%"
-        parent: "sp_data.abstract_resource_owner.oauth2"
-        public: true
-
-    sp_data.resource_owner.instagram.analytic:
-        class: "%sp_data.resource_owner.instagram.analytic.class%"
-        parent: "sp_data.abstract_resource_owner.oauth2"
-        public: true
-
-    sp_data.resource_owner.google.analytic:
-        class: "%sp_data.resource_owner.google.analytic.class%"
-        parent: "sp_data.abstract_resource_owner.oauth2"
-        public: true
-
-    sp_data.resource_owner.google.analytic.geographic:
-        class: "%sp_data.resource_owner.google.analytic.geographic.class%"
-        parent: "sp_data.abstract_resource_owner.oauth2"
-        public: true
-
-    sp_data.resource_owner.google.analytic.demographic:
-        class: "%sp_data.resource_owner.google.analytic.demographic.class%"
-        parent: "sp_data.abstract_resource_owner.oauth2"
-        public: true
-
-    sp_data.resource_owner.google.analytic.gender:
-        class: "%sp_data.resource_owner.google.analytic.demographic.class%"
-        parent: "sp_data.abstract_resource_owner.oauth2"
-        public: true
-
-    sp_data.resource_owner.tiktok.posts:
-        class: "%sp_data.resource_owner.tiktok.posts.class%"
-        parent: "sp_data.abstract_resource_owner.oauth2"
-        public: true
-
-    sp_data.resource_owner.tiktok.post:
-        class: "%sp_data.resource_owner.tiktok.post.class%"
-        parent: "sp_data.abstract_resource_owner.oauth2"
-        public: true
-
-    sp_data.resource_owner.tiktok.post.analytic:
-        class: "%sp_data.resource_owner.tiktok.post.analytic.class%"
-        parent: "sp_data.abstract_resource_owner.oauth2"
-        public: true
-
-    sp_data.resource_owner.tiktok.analytic:
-        class: "%sp_data.resource_owner.tiktok.analytic.class%"
-        parent: "sp_data.abstract_resource_owner.oauth2"
-        public: true

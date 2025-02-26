@@ -11,6 +11,7 @@ use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\DefinitionDecorator;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 class SPDataExtension extends Extension
@@ -29,10 +30,12 @@ class SPDataExtension extends Extension
         // setup services for all configured resource owners
         $resourceOwners = [];
         foreach ($config['resource_owners'] as $name => $options) {
-            $resourceOwners[$name] = $name;
+            $resourceOwners[$name] = new Reference('sp_data.resource_owner.' . $name);
             $this->createResourceOwnerService($container, $name, $options);
         }
-        $container->setParameter('sp_data.resource_owners', $resourceOwners);
+
+        $locatorDefinition = $container->getDefinition('sp_data.resource_owner_locator');
+        $locatorDefinition->setArgument(0, $resourceOwners);
     }
 
     /**
@@ -90,7 +93,7 @@ class SPDataExtension extends Extension
         if ('httplug.client.default' === $httpClientId && !isset($bundles['HttplugBundle'])) {
             throw new InvalidConfigurationException('You must setup php-http/httplug-bundle to use the default http client service.');
         }
-        if ('httplug.factory.guzzle7' === $httpMessageFactoryId && !isset($bundles['HttplugBundle'])) {
+        if ('httplug.psr17_request_factory' === $httpMessageFactoryId && !isset($bundles['HttplugBundle'])) {
             throw new InvalidConfigurationException('You must setup php-http/httplug-bundle to use the default http message factory service.');
         }
 
