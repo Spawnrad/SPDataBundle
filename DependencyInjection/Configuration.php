@@ -79,7 +79,7 @@ class Configuration implements ConfigurationInterface
      *
      * @return TreeBuilder $builder The tree builder
      */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         $builder = new TreeBuilder('sp_data');
 
