@@ -14,6 +14,38 @@ class Channel extends GenericOAuth2ResourceOwner
         'items' => 'items',
     ];
 
+    public function getInformation(array $extraParameters = [], $content = null)
+    {
+        $headers = $this->getHeaderInformation();
+
+        if (isset($extraParameters['channelId'])) {
+            $url = $this->options['infos_url'];
+            $url = str_replace('&mine=true', '', $url);
+            $url .= '&id=' . $extraParameters['channelId'];
+            $url .= '&key=' . $_ENV['DATA_YOUTUBE_KEY'];
+
+            unset($extraParameters['channelId']);
+        } else {
+            $url = $this->options['infos_url'];
+        }
+
+        if ($this->options['use_bearer_authorization']) {
+            $result = $this->httpRequest($this->normalizeUrl($url, $extraParameters), $content, $headers);
+        } else {
+            $result = $this->httpRequest($this->normalizeUrl($url, array_merge($headers, $extraParameters)), $content);
+        }
+
+        $response = $this->getDataResponse();
+        $response->setResponse($result->getBody());
+        $response->setStatusCode($result->getStatusCode());
+        if ($result->getHeader('Etag')) {
+            $response->setEtag($result->getHeader('Etag')[0]);
+        }
+        $response->setResourceOwner($this);
+
+        return $response;
+    }
+
     protected function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
