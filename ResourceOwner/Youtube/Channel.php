@@ -18,13 +18,8 @@ class Channel extends GenericOAuth2ResourceOwner
     {
         $headers = $this->getHeaderInformation();
 
-        if (isset($extraParameters['channelId'])) {
-            $url = $this->options['infos_url'];
-            $url = str_replace('&mine=true', '', $url);
-            $url .= '&id=' . $extraParameters['channelId'];
-            $url .= '&key=' . $_ENV['DATA_YOUTUBE_KEY'];
-
-            unset($extraParameters['channelId']);
+        if (isset($extraParameters['id'])) {
+            $url = str_replace('&mine=true', '', $this->options['infos_url']);
         } else {
             $url = $this->options['infos_url'];
         }
